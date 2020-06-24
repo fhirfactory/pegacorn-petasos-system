@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2020 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,15 @@
  * SOFTWARE.
  */
 
-package net.fhirfactory.pegacorn.petasos.system;
+package net.fhirfactory.pegacorn.petasos.core.model.configuration;
 
-public class PetasosSystemManager {
+import net.fhirfactory.pegacorn.common.model.FDN;
+import net.fhirfactory.pegacorn.common.model.RDN;
+import net.fhirfactory.pegacorn.petasos.core.node.common.PetasosNodeModeEnum;
 
+public interface ServiceModuleInterface {
+    public PetasosNodeModeEnum getReliabilityMode();
+
+    public FDN getServiceModuleInstanceContext();
+    public FDN getServiceModuleTypeContext();
 }
