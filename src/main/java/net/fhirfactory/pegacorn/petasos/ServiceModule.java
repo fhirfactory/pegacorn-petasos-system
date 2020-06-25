@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.petasos.itops.model.PegacornComponentInstance;
+import net.fhirfactory.pegacorn.petasos.itops.model.PegacornCI;
 
 /**
  * 
@@ -42,7 +42,7 @@ import net.fhirfactory.pegacorn.petasos.itops.model.PegacornComponentInstance;
  * @author Mark A. Hunter
  *
  */
-public class ServiceModule extends PegacornComponentInstance {
+public class ServiceModule extends PegacornCI {
 	private static final Logger LOG = LoggerFactory.getLogger(ServiceModule.class);
 	
 	private HashMap<FDNToken, ProcessingPlant> containedProcessingPlantSet;

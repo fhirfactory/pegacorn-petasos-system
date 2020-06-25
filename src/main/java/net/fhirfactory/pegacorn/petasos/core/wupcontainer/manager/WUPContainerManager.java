@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Mark A. Hunter
+ * Copyright (c) 2020 MAHun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,46 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.petasos.core.model.uow;
 
-import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.common.model.FDNTokenSet;
+package net.fhirfactory.pegacorn.petasos.core.wupcontainer.manager;
 
-/**
- * @author Mark A. Hunter
- */
-public class UoWPayload {
-    private FDNToken payloadType;
-    private String payload;
+import net.fhirfactory.pegacorn.common.model.FDN;
+import net.fhirfactory.pegacorn.petasos.core.model.wupcontainer.WUPContainerDefinition;
 
-    public UoWPayload() {
-        payloadType = null;
-        payload = null;
+import net.fhirfactory.pegacorn.petasos.core.wupcontainer.worker.WUPContainerIngresProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class WUPContainerManager {
+    private static final Logger LOG = LoggerFactory.getLogger(WUPContainerManager.class);
+
+    private WUPContainerIngresProcessor processorBlock;
+    private WUPContainerDefinition contraption;
+
+    public WUPContainerManager(FDN wupTypeID, FDN wupInstanceID){
+        contraption = new WUPContainerDefinition(wupTypeID, wupInstanceID);
     }
 
-    public UoWPayload(UoWPayload originalUoWPayload) {
-        payloadType = new FDNToken(originalUoWPayload.getPayloadType());
-        payload = new String(originalUoWPayload.getPayload());
-    }
+    public String generateRouteSegment() {
 
-    public UoWPayload(FDNToken payloadType, String payloadContent){
-        this.payloadType = new FDNToken(payloadType);
-        this.payload = new String(payloadContent);
-    }
-
-    public FDNToken getPayloadType() {
-        return payloadType;
-    }
-
-    public void setPayloadType(FDNToken payloadType) {
-        this.payloadType = payloadType;
-    }
-
-    public String getPayload() {
-        return payload;
-    }
-
-    public void setPayload(String payload) {
-        this.payload = payload;
+    return(null);
     }
 }

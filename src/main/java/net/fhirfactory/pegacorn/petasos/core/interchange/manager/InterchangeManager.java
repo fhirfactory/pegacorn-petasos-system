@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 MAHun
+ * Copyright (c) 2020 Mark A. Hunter (ACT Health)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,14 @@
  * SOFTWARE.
  */
 
-package net.fhirfactory.pegacorn.petasos.itops.model;
+package net.fhirfactory.pegacorn.petasos.core.interchange.manager;
 
-import java.util.HashMap;
-
-import net.fhirfactory.pegacorn.petasos.core.model.map.MapElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.fhirfactory.pegacorn.common.model.FDNToken;
-
 /**
- * 
- * <b> Pegacorn System Component Hierarchy </b>
- * PegacornSubsytem contains PegacornService(s)
- * PegacornService contains ProcessingFactory(ies)
- * ProcessingFactory contains ProcessingPlant(s)
- * ProcessingPlant contains ProcessingEngines
- * --> A WUP is an instance of a ProcessingEngine
- * 
- * 
- * @author Mark A. Hunter
  *
  */
-
-public class PegacornSubSystem extends PegacornCI {
-	private static final Logger LOG = LoggerFactory.getLogger(PegacornSubSystem.class);
-	private HashMap<FDNToken, PegacornService> containedPegacornServiceSet;
-	private HashMap<FDNToken, MapElement> containedCOPSet;
-
+public class InterchangeManager {
+    private static final Logger LOG = LoggerFactory.getLogger(InterchangeManager.class);
 }

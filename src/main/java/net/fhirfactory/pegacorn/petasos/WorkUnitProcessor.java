@@ -24,13 +24,9 @@ package net.fhirfactory.pegacorn.petasos;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.RDN;
-import net.fhirfactory.pegacorn.petasos.core.model.wup.WorkUnitProcessorEgressModule;
-import net.fhirfactory.pegacorn.petasos.core.model.wup.WorkUnitProcessorIngresModule;
 import net.fhirfactory.pegacorn.petasos.core.model.wup.WorkUnitProcessorJobCard;
-import net.fhirfactory.pegacorn.petasos.itops.model.PegacornComponentInstance;
 import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
 import org.apache.camel.builder.RouteBuilder;
-import org.jgroups.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

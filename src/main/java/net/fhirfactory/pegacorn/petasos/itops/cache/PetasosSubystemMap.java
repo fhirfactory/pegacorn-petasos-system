@@ -23,7 +23,7 @@
 package net.fhirfactory.pegacorn.petasos.itops.cache;
 
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.petasos.itops.model.PegacornComponentInstance;
+import net.fhirfactory.pegacorn.petasos.itops.model.PegacornCI;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,5 +35,5 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @ApplicationScoped
 public class PetasosSubystemMap {
-    private ConcurrentHashMap<FDNToken, PegacornComponentInstance>  systemComponentMap;
+    private ConcurrentHashMap<FDNToken, PegacornCI>  systemComponentMap;
 }

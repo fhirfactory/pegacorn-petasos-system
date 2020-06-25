@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Mark A. Hunter
+ * Copyright (c) 2020 MAHun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,46 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.petasos.core.model.uow;
+package net.fhirfactory.pegacorn.petasos.itops.model;
 
-import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.common.model.FDNTokenSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.fhirfactory.pegacorn.common.model.FDN;
 
 /**
- * @author Mark A. Hunter
+ *
+ * @author ACT Health (Mark A. Hunter)
  */
-public class UoWPayload {
-    private FDNToken payloadType;
-    private String payload;
+public class PegacornCI {
+	private static final Logger LOG = LoggerFactory.getLogger(PegacornCI.class);
 
-    public UoWPayload() {
-        payloadType = null;
-        payload = null;
+    private FDN instanceID;
+    private FDN typeID;
+    private PegacornCIStatus status;
+    private PegacornCIMetrics metrics;
+  
+
+    /**
+     * @return the componentInstanceFDN
+     */
+    public FDN getInstanceID() {
+        return(this.instanceID);
+    }
+    /**
+     * @param componentInstanceFDN the componentInstanceFDN to set
+     */
+    public void setInstanceID(FDN componentID) {
+        this.instanceID = componentID;
     }
 
-    public UoWPayload(UoWPayload originalUoWPayload) {
-        payloadType = new FDNToken(originalUoWPayload.getPayloadType());
-        payload = new String(originalUoWPayload.getPayload());
-    }
-
-    public UoWPayload(FDNToken payloadType, String payloadContent){
-        this.payloadType = new FDNToken(payloadType);
-        this.payload = new String(payloadContent);
-    }
-
-    public FDNToken getPayloadType() {
-        return payloadType;
-    }
-
-    public void setPayloadType(FDNToken payloadType) {
-        this.payloadType = payloadType;
-    }
-
-    public String getPayload() {
-        return payload;
-    }
-
-    public void setPayload(String payload) {
-        this.payload = payload;
-    }
 }

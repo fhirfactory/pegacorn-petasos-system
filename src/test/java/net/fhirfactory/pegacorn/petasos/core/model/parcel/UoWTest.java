@@ -23,6 +23,7 @@
 package net.fhirfactory.pegacorn.petasos.core.model.parcel;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
+import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.common.model.RDN;
 import net.fhirfactory.pegacorn.petasos.core.model.test.samples.uow.SampleCommunicateIRISUoWSet;
 import net.fhirfactory.pegacorn.petasos.core.model.uow.UoW;
@@ -122,7 +123,7 @@ class UoWTest {
         UoWPayloadSet referencePayloadSet = new UoWPayloadSet();
         UoWPayload referencePayload = new UoWPayload();
         referencePayload.setPayload(irisUoWSet.getDefaultRoomMessage());
-        FDN newMatrixPayloadType = new FDN();
+        FDNToken newMatrixPayloadType = new FDN();
         newMatrixPayloadType.appendRDN(new RDN("Matrix", "m.room.message"));
         newMatrixPayloadType.appendRDN(new RDN("Matrix", "m.text"));
         referencePayload.setPayloadType(newMatrixPayloadType);
@@ -147,7 +148,7 @@ class UoWTest {
         UoWPayloadSet referencePayloadSet = new UoWPayloadSet();
         UoWPayload referencePayload = new UoWPayload();
         referencePayload.setPayload(new String("silly payload content"));
-        FDN newMatrixPayloadType = new FDN();
+        FDNToken newMatrixPayloadType = new FDN();
         newMatrixPayloadType.appendRDN(new RDN("Matrix", "m.room.message"));
         newMatrixPayloadType.appendRDN(new RDN("Matrix", "garbage"));
         referencePayload.setPayloadType(newMatrixPayloadType);
@@ -174,7 +175,7 @@ class UoWTest {
         UoWPayloadSet referencePayloadSet = new UoWPayloadSet();
         UoWPayload referencePayload = new UoWPayload();
         referencePayload.setPayload(new String("silly payload content"));
-        FDN newMatrixPayloadType = new FDN();
+        FDNToken newMatrixPayloadType = new FDN();
         newMatrixPayloadType.appendRDN(new RDN("Matrix", "m.room.message"));
         newMatrixPayloadType.appendRDN(new RDN("Matrix", "garbage"));
         referencePayload.setPayloadType(newMatrixPayloadType);

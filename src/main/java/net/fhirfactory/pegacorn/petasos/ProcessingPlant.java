@@ -25,13 +25,14 @@ package net.fhirfactory.pegacorn.petasos;
 import java.util.HashMap;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
-import net.fhirfactory.pegacorn.petasos.core.model.contraption.ContraptionDefinition;
 import net.fhirfactory.pegacorn.petasos.core.model.map.MapElement;
+import net.fhirfactory.pegacorn.petasos.core.model.wupcontainer.WUPContainerDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.petasos.itops.model.PegacornComponentInstance;
+import net.fhirfactory.pegacorn.petasos.itops.model.PegacornCI;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -48,14 +49,14 @@ import javax.enterprise.context.ApplicationScoped;
  */
 
 @ApplicationScoped
-public class ProcessingPlant  extends PegacornComponentInstance {
+public class ProcessingPlant  extends PegacornCI {
 	private static final Logger LOG = LoggerFactory.getLogger(ProcessingPlant.class);
 	
-	private HashMap<FDNToken, ContraptionDefinition> containedContraptionSet;
+	private HashMap<FDNToken, WUPContainerDefinition> containedContraptionSet;
 	private HashMap<FDNToken, MapElement> containedProcessingPathSet;
 
 	public ProcessingPlant(){
-		this.containedContraptionSet = new HashMap<FDNToken, ContraptionDefinition>();
+		this.containedContraptionSet = new HashMap<FDNToken, WUPContainerDefinition>();
 		this.containedProcessingPathSet = new HashMap<FDNToken, MapElement>();
 	}
 

@@ -30,7 +30,7 @@ import net.fhirfactory.pegacorn.petasos.core.model.uow.UoW;
 import net.fhirfactory.pegacorn.petasos.core.model.wup.WorkUnitProcessorJobCard;
 import net.fhirfactory.pegacorn.petasos.core.node.common.PetasosNodeModeEnum;
 import net.fhirfactory.pegacorn.petasos.core.node.common.PetasosNodeProxyInterface;
-import net.fhirfactory.pegacorn.petasos.core.node.standalone.engine.StandalonePetasosNodeProxy;
+import net.fhirfactory.pegacorn.petasos.core.node.standalone.engine.StandalonePetasosNodeIM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,7 @@ public class PetasosNodeIM implements PetasosNodeProxyInterface{
     ServiceModuleProperties instanceProperties;
 
     @Inject
-    StandalonePetasosNodeProxy standalonePetasosNode;
+    StandalonePetasosNodeIM standalonePetasosNode;
 
     PetasosNodeIM(){
         this.availabilityMode = instanceProperties.getReliabilityMode();

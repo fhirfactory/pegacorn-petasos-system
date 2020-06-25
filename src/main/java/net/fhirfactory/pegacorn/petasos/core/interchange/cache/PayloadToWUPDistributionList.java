@@ -30,6 +30,7 @@ public class PayloadToWUPDistributionList {
     	LOG.debug(".getDistrubtionForPayload(): Entry, payloadType --> {}", payloadType);
     	if(distributionList.isEmpty()) {
     		LOG.debug("getDistrubtionForPayload(): Exit, empty list so can't match");
+    		
     		return(null);
     	}
     	if(this.distributionList.containsKey(payloadType)) {

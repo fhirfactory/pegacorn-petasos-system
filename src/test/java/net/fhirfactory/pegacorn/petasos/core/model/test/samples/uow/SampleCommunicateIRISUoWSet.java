@@ -29,6 +29,7 @@ import java.util.List;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import net.fhirfactory.pegacorn.common.model.FDN;
+import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.common.model.RDN;
 import net.fhirfactory.pegacorn.fhir.r4.model.common.CommunicationPC;
 import net.fhirfactory.pegacorn.fhir.r4.model.common.GroupPC;
@@ -97,7 +98,7 @@ public class SampleCommunicateIRISUoWSet {
         // Create Ingres Payload
         UoWPayload communicateUoWIngresPayload = new UoWPayload();
         communicateUoWIngresPayload.setPayload(roomMessage);
-        FDN newMatrixPayloadType = new FDN();
+        FDNToken newMatrixPayloadType = new FDN();
         newMatrixPayloadType.appendRDN(new RDN("Matrix", "m.room.message"));
         newMatrixPayloadType.appendRDN(new RDN("Matrix", "m.text"));
         communicateUoWIngresPayload.setPayloadType(newMatrixPayloadType);
@@ -118,7 +119,7 @@ public class SampleCommunicateIRISUoWSet {
         String fhirCommunication = buildCommunicationEntity(roomMessageObject);
         communicateUoWEgressPayload.setPayload(fhirCommunication);
         // Create Egress Payload Type FDN
-        FDN newCommunicationPayloadType = new FDN();
+        FDNToken newCommunicationPayloadType = new FDN();
         newCommunicationPayloadType.appendRDN(new RDN("FHIR", "Communication"));
         communicateUoWEgressPayload.setPayloadType(newCommunicationPayloadType);
         // Populate the Egress Payload Set
@@ -377,7 +378,7 @@ public class SampleCommunicateIRISUoWSet {
         String fhirGroup = buildGroupEntityFromRoomMessageEvent(roomMessageObject);
         groupUoWEgressPayload.setPayload(fhirGroup);
         LOG.trace(".createIngresPlus2EgressUoW(): Create Egress Payload Type FDN");
-        FDN newCommunicationPayloadType = new FDN();
+        FDNToken newCommunicationPayloadType = new FDN();
         newCommunicationPayloadType.appendRDN(new RDN("FHIR", "Group"));
         groupUoWEgressPayload.setPayloadType(newCommunicationPayloadType);
         LOG.trace(".createIngresPlus2EgressUoW(): Populate the Egress Payload Set");

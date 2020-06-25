@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 MAHun
+ * Copyright (c) 2020 Mark A. Hunter (ACT Health)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,10 +61,10 @@ public class UoWPayloadSet {
             return (newString);
         }
         Iterator<UoWPayload> payloadIterator = payloadElements.iterator();
-        newString = new String("{[");
+        newString = new String("UoWPayloadSet={(");
         while (payloadIterator.hasNext()) {
             newString = newString + payloadIterator.next().getPayload();
-            newString = newString + "]";
+            newString = newString + ")";
             if (payloadIterator.hasNext()) {
                 newString = newString + ",";
             }

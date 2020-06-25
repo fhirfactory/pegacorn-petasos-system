@@ -43,7 +43,7 @@ import net.fhirfactory.pegacorn.petasos.ServiceModule;
  *
  */
 
-public class PegacornService  extends PegacornComponentInstance {
+public class PegacornService  extends PegacornCI {
 	private static final Logger LOG = LoggerFactory.getLogger(PegacornService.class);
 	
 	private HashMap<FDNToken, ServiceModule> containedProcessingFactorySet;

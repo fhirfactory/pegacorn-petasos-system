@@ -49,13 +49,6 @@ public class UoW {
      */
     private FDN uowInstanceID;
     /**
-     * The FDN (fully distinguished name) of the Component Function that is
-     * required to process this UoW. This value could be derived from the uowFDN
-     * - but for ease of utilisation and future-proofness - we have separated it
-     * here.
-     */
-    private FDN requiredFunctionTypeID;
-    /**
      * The set of (JSON) objects that represent the ingress (or starting set) of
      * information of this UoW.
      */
@@ -78,13 +71,12 @@ public class UoW {
     // Constructors
     //
 
-    public UoW(FDN functionFDN, FDN uowTypeID, UoWPayloadSet theInput) {
-        LOG.debug(".UoW(): Constructor: functionFDN --> {}, uowTypeFDN --> {}, UoWPayloadSet -->{}", functionFDN, uowTypeID, theInput);
+    public UoW(FDN uowTypeID, UoWPayloadSet theInput) {
+        LOG.debug(".UoW(): Constructor: functionFDN --> {}, uowTypeFDN --> {}, UoWPayloadSet -->{}", uowTypeID, theInput);
         String generatedInstanceValue = Long.toString(Instant.now().getNano());
         this.uowIngresContent = new UoWPayloadSet(theInput);
         this.uowEgressContent = new UoWPayloadSet();
         this.uowProcessingOutcome = UoWProcessingOutcomeEnum.UOW_OUTCOME_NOTSTARTED;
-        this.requiredFunctionTypeID = new FDN(functionFDN);
         this.uowTypeID = new FDN(uowTypeID);
         FDN instanceFDN = new FDN(uowTypeID);
         RDN newRDN = new RDN(HASH_ATTRIBUTE, generatedInstanceValue);
@@ -92,25 +84,11 @@ public class UoW {
         this.uowInstanceID = instanceFDN;
         if (LOG.isTraceEnabled()) {
             LOG.trace("UoW(FDN, FDN, UoWPayloadSet): this.uowTypeFDN --> {}", this.getUowTypeID());
-            LOG.trace("UoW(FDN, FDN, UoWPayloadSet): this.requiredFunctionFDN --> {}", this.getRequiredFunctionTypeID());
         }
-    }
-
-    public UoW(FDN functionFDN, FDN uowTypeID, String uowQualifier, UoWPayloadSet inputPayload) {
-        this.uowIngresContent = inputPayload;
-        this.uowEgressContent = new UoWPayloadSet();
-        this.uowProcessingOutcome = UoWProcessingOutcomeEnum.UOW_OUTCOME_NOTSTARTED;
-        this.uowInstanceID = new FDN(functionFDN);
-        this.uowTypeID = new FDN(uowTypeID);
-        FDN instanceFDN = new FDN(uowTypeID);
-        RDN newRDN = new RDN(HASH_ATTRIBUTE, uowQualifier);
-        instanceFDN.appendRDN(newRDN);
-        this.uowInstanceID = instanceFDN;
     }
 
     public UoW(UoW originalUoW) {
         this.uowInstanceID = new FDN(originalUoW.getUoWInstanceID());
-        this.requiredFunctionTypeID = new FDN(originalUoW.getRequiredFunctionTypeID());
         this.uowIngresContent = new UoWPayloadSet(originalUoW.getUowIngresContent());
         this.uowIngresContent = new UoWPayloadSet();
         this.uowIngresContent.getPayloadElements().addAll(originalUoW.getUowIngresContent().getPayloadElements());
@@ -126,7 +104,6 @@ public class UoW {
         FDN instanceFDN = new FDN(uowTypeID);
         RDN newRDN = new RDN(HASH_ATTRIBUTE, generatedInstanceValue);
         this.uowInstanceID.appendRDN(newRDN);
-        this.requiredFunctionTypeID = requiredFunctionTypeID;
     }
 
     /**
@@ -189,19 +166,6 @@ public class UoW {
         this.uowProcessingOutcome = uowProcessingOutcome;
     }
 
-    /**
-     * @return FDN - the (expected) UoW function/instance type to be applied to this UoW.
-     */
-    public FDN getRequiredFunctionTypeID() {
-        return requiredFunctionTypeID;
-    }
-
-    /**
-     * @param requiredFunctionTypeID the requiredFunctionFDN to set
-     */
-    public void setRequiredFunctionTypeID(FDN requiredFunctionTypeID) {
-        this.requiredFunctionTypeID = requiredFunctionTypeID;
-    }
 
     @Override
     public String toString() {
@@ -217,11 +181,6 @@ public class UoW {
             uowToString = uowToString + ", uowTypeFDN=" + uowTypeID.toString();
         } else {
             uowToString = uowToString + ", uowTypeFDN=null";
-        }
-        if (requiredFunctionTypeID != null) {
-            uowToString = uowToString + ", requiredFunctionFDN=" + requiredFunctionTypeID.toString();
-        } else {
-            uowToString = uowToString + ", requiredFunctionFDN=null";
         }
         uowToString = uowToString + ", uowIngressContent=" + uowIngresContent.toString()
                 + ", uowEgressContent=" + uowEgressContent.toString()
