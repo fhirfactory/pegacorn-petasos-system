@@ -22,12 +22,24 @@
 
 package net.fhirfactory.pegacorn.petasos.core.interchange.manager;
 
+import net.fhirfactory.pegacorn.common.model.FDNToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
  */
+
+@ApplicationScoped
 public class InterchangeManager {
     private static final Logger LOG = LoggerFactory.getLogger(InterchangeManager.class);
+
+
+    public void instantiateProcessorSetAndRoutes(FDNToken ingresEndPoint, FDNToken transformerID, FDNToken routerID){
+
+    }
+
+
 }

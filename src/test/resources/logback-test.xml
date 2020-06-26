@@ -8,7 +8,7 @@
     </encoder>
   </appender>
 
-  <logger name="net.fhirfactory.pegacorn.petasos.core.model" level="TRACE"/>
+  <logger name="net.fhirfactory.pegacorn.petasos.model" level="TRACE"/>
   <logger name="net.fhirfactory.pegacorn.common" level="INFO"/>
   <logger name="net.fhirfactory.pegacorn.petasos.test.sampleuows" level="INFO"/>
 

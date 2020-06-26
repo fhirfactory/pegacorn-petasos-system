@@ -25,12 +25,12 @@ package net.fhirfactory.pegacorn.petasos.core.wupcontainer.worker;
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.petasos.core.agent.PetasosWUPContainerAgent;
-import net.fhirfactory.pegacorn.petasos.core.model.handover.HandoverParcel;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelJobCard;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelProcessingStatusEnum;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoW;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoWProcessingOutcomeEnum;
+import net.fhirfactory.pegacorn.petasos.model.handover.HandoverParcel;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelJobCard;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoWProcessingOutcomeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

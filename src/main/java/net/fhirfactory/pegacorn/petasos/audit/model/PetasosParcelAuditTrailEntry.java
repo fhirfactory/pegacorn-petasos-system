@@ -24,10 +24,10 @@ package net.fhirfactory.pegacorn.petasos.audit.model;
 
 import net.fhirfactory.pegacorn.common.model.FDNTokenSet;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoWProcessingOutcomeEnum;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelJobCard;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoW;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoWProcessingOutcomeEnum;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelJobCard;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
 
 import java.time.Instant;
 import java.util.Date;

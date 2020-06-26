@@ -25,7 +25,7 @@ package net.fhirfactory.pegacorn.petasos.audit.api;
 
 import net.fhirfactory.pegacorn.petasos.audit.model.PetasosParcelAuditTrailEntry;
 import net.fhirfactory.pegacorn.petasos.audit.forwarder.asynchronous.PetasosAsynchronousWriterQueue;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

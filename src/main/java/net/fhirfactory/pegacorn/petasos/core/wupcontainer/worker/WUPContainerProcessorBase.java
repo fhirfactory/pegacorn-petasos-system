@@ -24,7 +24,7 @@ package net.fhirfactory.pegacorn.petasos.core.wupcontainer.worker;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.RDN;
-import net.fhirfactory.pegacorn.petasos.core.model.configuration.ServiceModuleInterface;
+import net.fhirfactory.pegacorn.petasos.model.configuration.ServiceModulePropertiesInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,7 @@ public class WUPContainerProcessorBase {
     private static final Logger LOG = LoggerFactory.getLogger(WUPContainerProcessorBase.class);
 
     @Inject
-    ServiceModuleInterface moduleProperties;
+    ServiceModulePropertiesInterface moduleProperties;
 
     protected FDN getWUPInstanceIDFromTypeID(FDN wupTypeID){
         LOG.debug(".getWUPInstanceIDFromTypeID(): Entry, wupTypeID --> {}", wupTypeID);

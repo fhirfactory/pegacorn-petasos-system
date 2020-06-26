@@ -23,9 +23,9 @@
 package net.fhirfactory.pegacorn.petasos.core.interchange.worker;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoW;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoWPayload;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoWPayloadSet;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoWPayload;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoWPayloadSet;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

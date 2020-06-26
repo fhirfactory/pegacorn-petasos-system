@@ -25,8 +25,8 @@ package net.fhirfactory.pegacorn.petasos.core.interchange.worker;
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.common.model.FDNTokenSet;
-import net.fhirfactory.pegacorn.petasos.core.interchange.cache.PayloadToWUPDistributionList;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoW;
+import net.fhirfactory.pegacorn.petasos.core.servicemodule.cache.PayloadToWUPDistributionList;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class InterchangeTargetWUPTypeRouter {
     PayloadToWUPDistributionList distributionList;
 
     String forwardUoW2WUPs(UoW incomingTraffic, Exchange camelExchange) {
-        LOG.debug(".forwardUoW2WUPs(): 1st Let's see if we've already started prpcessing this UoW
+        LOG.debug(".forwardUoW2WUPs(): Entry, incomingTraffic --> {}, camelExchange --> ###", incomingTraffic);
         FDN currentUoWID = incomingTraffic.getUowTypeID();
         String propertyName = CURRENT_END_POINT_SET+currentUoWID.getUnqualifiedRDN().getNameValue();
         FDNTokenSet targetWUPSet = camelExchange.getProperty(propertyName, FDNTokenSet.class);
@@ -54,10 +54,12 @@ public class InterchangeTargetWUPTypeRouter {
             alreadyInstalled = false;
             targetWUPSet = distributionList.getDistrubtionForPayload(incomingTraffic.getUowTypeID().getToken());
             if(targetWUPSet == null){
+                LOG.debug(".forwardUoW2WUPs(): Exit, nobody was interested in processing this UoW");
                 return(null);
             }
         }
         if(targetWUPSet.isEmpty()){
+            LOG.debug(".forwardUoW2WUPs(): Exit, finished iterating through interested/registered endpoints");
             return(null);
         }
         if(alreadyInstalled){
@@ -68,6 +70,7 @@ public class InterchangeTargetWUPTypeRouter {
         targetWUPSet.removeElement(thisOne);
         camelExchange.setProperty(propertyName, targetWUPSet);
         String endpointDetail = thisIterationEndPoint.getUnqualifiedToken();
+        LOG.debug(".forwardUoW2WUPs(): Exiting, returning another registered/interested endpoint: endpointDetail -->{}", endpointDetail);
         return(endpointDetail);
     }
 }

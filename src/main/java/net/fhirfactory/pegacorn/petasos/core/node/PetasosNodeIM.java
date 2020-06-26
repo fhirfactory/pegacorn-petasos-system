@@ -23,11 +23,11 @@
 package net.fhirfactory.pegacorn.petasos.core.node;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
-import net.fhirfactory.pegacorn.petasos.ServiceModuleProperties;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelJobCard;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoW;
-import net.fhirfactory.pegacorn.petasos.core.model.wup.WorkUnitProcessorJobCard;
+import net.fhirfactory.pegacorn.petasos.properties.ServiceModuleProperties;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelJobCard;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
+import net.fhirfactory.pegacorn.petasos.model.wup.WorkUnitProcessorJobCard;
 import net.fhirfactory.pegacorn.petasos.core.node.common.PetasosNodeModeEnum;
 import net.fhirfactory.pegacorn.petasos.core.node.common.PetasosNodeProxyInterface;
 import net.fhirfactory.pegacorn.petasos.core.node.standalone.engine.StandalonePetasosNodeIM;

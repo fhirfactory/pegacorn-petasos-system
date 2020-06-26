@@ -23,7 +23,7 @@
 package net.fhirfactory.pegacorn.petasos.core.wupcontainer.manager;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
-import net.fhirfactory.pegacorn.petasos.core.model.wupcontainer.WUPContainerDefinition;
+import net.fhirfactory.pegacorn.petasos.model.wupcontainer.WUPContainerDefinition;
 
 import net.fhirfactory.pegacorn.petasos.core.wupcontainer.worker.WUPContainerIngresProcessor;
 import org.slf4j.Logger;

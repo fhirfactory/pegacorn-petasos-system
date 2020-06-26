@@ -29,8 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelProcessingStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

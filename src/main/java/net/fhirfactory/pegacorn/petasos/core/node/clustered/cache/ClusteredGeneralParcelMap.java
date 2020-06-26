@@ -30,8 +30,8 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelProcessingStatusEnum;
 import org.apache.camel.CamelContext;
 import org.infinispan.Cache;
 import org.infinispan.manager.DefaultCacheManager;

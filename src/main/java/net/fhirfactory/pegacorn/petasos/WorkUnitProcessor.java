@@ -24,12 +24,15 @@ package net.fhirfactory.pegacorn.petasos;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.RDN;
-import net.fhirfactory.pegacorn.petasos.core.model.wup.WorkUnitProcessorJobCard;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.core.wup.WorkUnitProcessorProxy;
+import net.fhirfactory.pegacorn.petasos.model.wup.WorkUnitProcessorJobCard;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.core.servicemodule.manager.ServiceModuleIM;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.time.Instant;
 
 public abstract class WorkUnitProcessor extends RouteBuilder {
@@ -42,14 +45,15 @@ public abstract class WorkUnitProcessor extends RouteBuilder {
     private String wupEgressPoint = null;
     private String wupIngresPoint= null;
 
+    @Inject
+    WorkUnitProcessorProxy wupProxy;
+
     final protected void register(FDN myWUPTypeID){
+        moduleIM.registerWUP(myWUPTypeID.getToken());
         this.wupTypeID = new FDN(myWUPTypeID);
         FDN newWUPInstanceID = new FDN(myWUPTypeID);
         newWUPInstanceID.appendRDN(new RDN("InstanceQualifier", Integer.toHexString(Instant.now().getNano())));
         this.wupInstanceID = newWUPInstanceID;
-        wupEgressPoint = new String(wupInstanceID.getUnqualifiedToken()+"<WUPEgressPoint>");
-        wupIngresPoint = new String(wupInstanceID.getUnqualifiedToken()+"<WUPIngresPoint>");
-
     }
 
     protected String ingresFeed(){

@@ -25,14 +25,14 @@ package net.fhirfactory.pegacorn.petasos;
 import java.util.HashMap;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
-import net.fhirfactory.pegacorn.petasos.core.model.map.MapElement;
-import net.fhirfactory.pegacorn.petasos.core.model.wupcontainer.WUPContainerDefinition;
+import net.fhirfactory.pegacorn.petasos.model.servicemodule.MapElement;
+import net.fhirfactory.pegacorn.petasos.model.wupcontainer.WUPContainerDefinition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.petasos.itops.model.PegacornCI;
+import net.fhirfactory.pegacorn.petasos.core.itops.model.PegacornCI;
 
 import javax.enterprise.context.ApplicationScoped;
 

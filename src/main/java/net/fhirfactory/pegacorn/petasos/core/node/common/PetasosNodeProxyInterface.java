@@ -23,10 +23,10 @@
 package net.fhirfactory.pegacorn.petasos.core.node.common;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelJobCard;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoW;
-import net.fhirfactory.pegacorn.petasos.core.model.wup.WorkUnitProcessorJobCard;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelJobCard;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
+import net.fhirfactory.pegacorn.petasos.model.wup.WorkUnitProcessorJobCard;
 
 public interface PetasosNodeProxyInterface {
     public WorkUnitProcessorJobCard registerAndNotifyExecution(WorkUnitProcessorJobCard existingJobCard, UoW unitOfWork, FDN previousPetasosParcelInstanceID, boolean synchronousWriteToAudit );

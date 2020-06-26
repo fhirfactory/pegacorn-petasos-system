@@ -29,14 +29,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import net.fhirfactory.pegacorn.petasos.audit.api.PetasosAuditWriter;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelFinalisationStatusEnum;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelJobCard;
-import net.fhirfactory.pegacorn.petasos.core.model.uow.UoW;
-import net.fhirfactory.pegacorn.petasos.core.model.wup.WorkUnitProcessorJobCard;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelJobCard;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
+import net.fhirfactory.pegacorn.petasos.model.wup.WorkUnitProcessorJobCard;
 import net.fhirfactory.pegacorn.petasos.core.node.common.PetasosNodeProxyInterface;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcel;
-import net.fhirfactory.pegacorn.petasos.core.model.parcel.PetasosParcelProcessingStatusEnum;
-import net.fhirfactory.pegacorn.petasos.core.model.wup.WorkUnitProcessorActivityStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.wup.WorkUnitProcessorActivityStatusEnum;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

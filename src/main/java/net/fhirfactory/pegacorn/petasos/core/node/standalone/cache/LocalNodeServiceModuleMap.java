@@ -23,8 +23,8 @@
 package net.fhirfactory.pegacorn.petasos.core.node.standalone.cache;
 
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.petasos.core.model.map.LinkingRoute;
-import net.fhirfactory.pegacorn.petasos.core.model.map.MapElement;
+import net.fhirfactory.pegacorn.petasos.model.servicemodule.LinkingRoute;
+import net.fhirfactory.pegacorn.petasos.model.servicemodule.MapElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
