@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
+import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.common.model.RDN;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,156 +36,236 @@ import org.slf4j.LoggerFactory;
  * @author Mark A. Hunter
  */
 public class UoW {
+
     private static final Logger LOG = LoggerFactory.getLogger(UoW.class);
 
     public static final String HASH_ATTRIBUTE = "InstanceQualifier";
     /**
      * The FDN (fully distinguished name) of this UoW Type.
      */
-    private FDN uowTypeID;
+    private FDNToken typeID;
     /**
-     * The FDN (fully distinguished name) of this UoW instance. Built from a
-     * combination of the required "Component Function FDN" that would be
-     * required to process it plus some unique characteristic.
+     * The FDN (fully distinguished name) of this UoW instance.
      */
-    private FDN uowInstanceID;
+    private FDNToken instanceID;
     /**
      * The set of (JSON) objects that represent the ingress (or starting set) of
      * information of this UoW.
      */
-    private UoWPayloadSet uowIngresContent;
+    private UoWPayload ingresContent;
     /**
      * The set of (JSON) objects created as part of the completion of this UoW.
      */
-    private UoWPayloadSet uowEgressContent;
+    private UoWPayloadSet egressContent;
     /**
      * The (enum) outcome status of the processing of this UoW.
      */
-    private UoWProcessingOutcomeEnum uowProcessingOutcome;
+    private UoWProcessingOutcomeEnum processingOutcome;
 
-    /**
-     * The enclosing PetasosParcel for this UoW Instance.
-     */
-    private FDN enclosingParcelInstanceID;
+    private FDNToken payloadCreator;
 
     //
     // Constructors
     //
-
-    public UoW(FDN uowTypeID, UoWPayloadSet theInput) {
-        LOG.debug(".UoW(): Constructor: functionFDN --> {}, uowTypeFDN --> {}, UoWPayloadSet -->{}", uowTypeID, theInput);
-        String generatedInstanceValue = Long.toString(Instant.now().getNano());
-        this.uowIngresContent = new UoWPayloadSet(theInput);
-        this.uowEgressContent = new UoWPayloadSet();
-        this.uowProcessingOutcome = UoWProcessingOutcomeEnum.UOW_OUTCOME_NOTSTARTED;
-        this.uowTypeID = new FDN(uowTypeID);
+    public UoW(FDNToken uowTypeID, UoWPayload inputPayload) {
+        LOG.debug(".UoW(): Constructor: functionFDN --> {}, uowTypeID --> {}, inputPayload -->{}", uowTypeID, inputPayload);
+        this.ingresContent = new UoWPayload(inputPayload);
+        this.egressContent = new UoWPayloadSet();
+        this.processingOutcome = UoWProcessingOutcomeEnum.UOW_OUTCOME_NOTSTARTED;
+        this.typeID = new FDNToken(uowTypeID);
         FDN instanceFDN = new FDN(uowTypeID);
-        RDN newRDN = new RDN(HASH_ATTRIBUTE, generatedInstanceValue);
-        instanceFDN.appendRDN(newRDN);
-        this.uowInstanceID = instanceFDN;
+        generateInstanceID();
+        this.payloadCreator = null;
         if (LOG.isTraceEnabled()) {
-            LOG.trace("UoW(FDN, FDN, UoWPayloadSet): this.uowTypeFDN --> {}", this.getUowTypeID());
+            LOG.trace("UoW(FDN, UoWPayloadSet): this.typeID -->, this.instanceID -->{}", this.typeID, this.instanceID);
         }
     }
 
     public UoW(UoW originalUoW) {
-        this.uowInstanceID = new FDN(originalUoW.getUoWInstanceID());
-        this.uowIngresContent = new UoWPayloadSet(originalUoW.getUowIngresContent());
-        this.uowIngresContent = new UoWPayloadSet();
-        this.uowIngresContent.getPayloadElements().addAll(originalUoW.getUowIngresContent().getPayloadElements());
-        this.uowEgressContent = new UoWPayloadSet();
-        this.uowEgressContent.getPayloadElements().addAll(originalUoW.getUowEgressContent().getPayloadElements());
-        this.uowProcessingOutcome = originalUoW.getUowProcessingOutcome();
+        this.instanceID = new FDNToken(originalUoW.getInstanceID());
+        this.ingresContent = new UoWPayload(originalUoW.getIngresContent());
+        this.egressContent = new UoWPayloadSet();
+        this.egressContent.getPayloadElements().addAll(originalUoW.getEgressContent().getPayloadElements());
+        this.processingOutcome = originalUoW.getProcessingOutcome();
+        this.payloadCreator = originalUoW.getPayloadCreator();
+        this.typeID = new FDNToken(originalUoW.getTypeID());
+        generateInstanceID();
     }
 
-    public UoW(FDN requiredFunctionTypeID, FDN uowTypeID) {
-        LOG.debug(".UoW(): Constructor: functionFDN --> {}, uowTypeFDN --> {}, UoWPayloadSet -->{}", requiredFunctionTypeID, uowTypeID);
-        String generatedInstanceValue = Long.toString(Instant.now().getNano());
-        this.uowTypeID = uowTypeID;
-        FDN instanceFDN = new FDN(uowTypeID);
-        RDN newRDN = new RDN(HASH_ATTRIBUTE, generatedInstanceValue);
-        this.uowInstanceID.appendRDN(newRDN);
+    public UoW(FDNToken uowTypeID) {
+        LOG.debug(".UoW(): Constructor: uowTypeFDN --> {}", uowTypeID);
+        this.typeID = uowTypeID;
+        generateInstanceID();
+        this.payloadCreator = null;
+        this.ingresContent = null;
+        this.egressContent = new UoWPayloadSet();
+    }
+
+    private void generateInstanceID(){
+        if(this.ingresContent == null){
+            String generatedInstanceValue = Long.toString(Instant.now().getNano());
+            FDN instanceFDN = new FDN(this.typeID);
+            RDN newRDN = new RDN(HASH_ATTRIBUTE, generatedInstanceValue);
+            instanceFDN.appendRDN(newRDN);
+            this.instanceID = instanceFDN.getToken();
+        } else {
+            int payloadHash = this.ingresContent.getPayload().hashCode();
+            String payloadHashAsHex = Integer.toHexString(payloadHash);
+            RDN newRDN = new RDN(HASH_ATTRIBUTE, payloadHashAsHex);
+            FDN instanceFDN = new FDN(this.typeID);
+            instanceFDN.appendRDN(newRDN);
+            this.instanceID = instanceFDN.getToken();
+        }
+    }
+
+    // instanceID Helper/Bean methods
+    public boolean hasInstanceID() {
+        if (this.instanceID == null) {
+            return (false);
+        } else {
+            return (true);
+        }
     }
 
     /**
-     * @return FDN - the UoW Instance FDN (which will be unique for each UoW within the system).
+     * @return FDN - the UoW Instance FDN (which will be unique for each UoW
+     * within the system).
      */
-    public FDN getUoWInstanceID() {
-        return uowInstanceID;
+    public FDNToken getInstanceID() {
+        return instanceID;
     }
 
-    public void setUoWInstanceID(FDN uowID) {
-        this.uowInstanceID = uowID;
+    public void setInstanceID(FDNToken uowID) {
+        this.instanceID = uowID;
+    }
+
+    // typeID Helper/Bean methods
+    public boolean hasTypeID() {
+        if (this.typeID == null) {
+            return (false);
+        } else {
+            return (true);
+        }
     }
 
     /**
-     * @return FDN - the UoW Type FDN (which describes the type or context of UoW).
+     * @return FDN - the UoW Type FDN (which describes the type or context of
+     * UoW).
      */
-    public FDN getUowTypeID() {
-        return this.uowTypeID;
+    public FDNToken getTypeID() {
+        return this.typeID;
     }
 
-    public void setUoWTypeID(FDN uowTypeID) {
-        this.uowTypeID = uowTypeID;
+    public void setUoWTypeID(FDNToken uowTypeID) {
+        this.typeID = uowTypeID;
+        generateInstanceID();
+    }
+
+    // ingresContent Helper/Bean methods
+    public boolean hasIngresContent() {
+        if (this.ingresContent == null) {
+            return (false);
+        } else {
+            return (true);
+        }
     }
 
     /**
      *
-     * @return UoWPayloadSet - the Ingres Payload Set (captured as a set of JSON Strings).
+     * @return UoWPayload- the Ingres Payload (captured as a set of JSON
+     * Strings).
      */
-    public UoWPayloadSet getUowIngresContent() {
-        return uowIngresContent;
+    public UoWPayload getIngresContent() {
+        return ingresContent;
     }
 
-    public void setUowIngresContent(UoWPayloadSet uowIngresContent) {
-        this.uowIngresContent.getPayloadElements().clear();
-        this.uowIngresContent.getPayloadElements().addAll(uowIngresContent.getPayloadElements());
+    public void setIngresContent(UoWPayload ingresContent) {
+        this.ingresContent = new UoWPayload(ingresContent);
+        generateInstanceID();
+    }
+
+    // egressContent Bean/Helper methods
+    public boolean hasEgressContent() {
+        if (this.egressContent == null) {
+            return (false);
+        }
+        if (this.egressContent.getPayloadElements().isEmpty()) {
+            return (false);
+        }
+        return (true);
     }
 
     /**
      *
-     * @return UoWPayloadSet - the Egress Payload Set (captured as a set of JSON Strings).
+     * @return UoWPayloadSet - the Egress Payload Set (captured as a set of JSON
+     * Strings).
      */
-    public UoWPayloadSet getUowEgressContent() {
-        return uowEgressContent;
+    public UoWPayloadSet getEgressContent() {
+        return egressContent;
     }
 
-    public void setUowEgressContent(UoWPayloadSet uowEgressContent) {
-        this.uowEgressContent.getPayloadElements().clear();
-        this.uowEgressContent.getPayloadElements().addAll(uowEgressContent.getPayloadElements());
+    public void setEgressContent(UoWPayloadSet egressContent) {
+        this.egressContent.getPayloadElements().clear();
+        this.egressContent.getPayloadElements().addAll(egressContent.getPayloadElements());
+    }
+
+    // processingOutcome Bean/Helper methods
+    public boolean hasProcessingOutcome() {
+        if (this.processingOutcome == null) {
+            return (false);
+        } else {
+            return (true);
+        }
     }
 
     /**
      *
-     * @return UoWProcessingOutcomeEnum - the status of the processing performed on (or applied to) this UoW.
+     * @return UoWProcessingOutcomeEnum - the status of the processing performed
+     * on (or applied to) this UoW.
      */
-    public UoWProcessingOutcomeEnum getUowProcessingOutcome() {
-        return uowProcessingOutcome;
+    public UoWProcessingOutcomeEnum getProcessingOutcome() {
+        return processingOutcome;
     }
 
-    public void setUowProcessingOutcome(UoWProcessingOutcomeEnum uowProcessingOutcome) {
-        this.uowProcessingOutcome = uowProcessingOutcome;
+    public void setProcessingOutcome(UoWProcessingOutcomeEnum processingOutcome) {
+        this.processingOutcome = processingOutcome;
     }
-
 
     @Override
     public String toString() {
         LOG.debug("toString(): Entry");
 
-        String uowToString = new String();
-        if (uowInstanceID != null) {
-            uowToString = uowToString + "UoW [uowInstanceFDN=" + uowInstanceID.toString();
+        String uowToString = "UoW={";
+        if (hasInstanceID()) {
+            uowToString = uowToString + "(instanceID:" + instanceID.toString() + "),";
         } else {
-            uowToString = uowToString + "UoW [uowInstanceFDN=null";
+            uowToString = uowToString + "(instanceID:null),";
         }
-        if (uowTypeID != null) {
-            uowToString = uowToString + ", uowTypeFDN=" + uowTypeID.toString();
+        if (hasTypeID()) {
+            uowToString = uowToString + "(typeID:" + typeID.toString() + "),";
         } else {
-            uowToString = uowToString + ", uowTypeFDN=null";
+            uowToString = uowToString + "(typeID:null),";
         }
-        uowToString = uowToString + ", uowIngressContent=" + uowIngresContent.toString()
-                + ", uowEgressContent=" + uowEgressContent.toString()
-                + ", uowProcessingOutcome=" + uowProcessingOutcome.getUoWProcessingOutcome();
+        if (hasPayloadCreator()) {
+            uowToString = uowToString + "(payloadCreator:" + payloadCreator.toString() + "),";
+        } else {
+            uowToString = uowToString + "(payloadCreater:null";
+        }
+        if (hasIngresContent()) {
+            uowToString = uowToString + "(ingresContent:" + ingresContent.toString() + "),";
+        } else {
+            uowToString = uowToString + "(ingresContent:null),";
+        }
+        if (hasEgressContent()) {
+            uowToString = uowToString + "(egressContent:" + egressContent.toString() + "),";
+        } else {
+            uowToString = uowToString + "(egressContent:null),";
+        }
+        if (hasProcessingOutcome()) {
+            uowToString = uowToString + "(processingOutcome:" + processingOutcome.toString() + ")}";
+        } else {
+            uowToString = uowToString + "(processingOutcome:null)}";
+        }
         return (uowToString);
     }
 
@@ -199,11 +280,20 @@ public class UoW {
         }
     }
 
-    public FDN getEnclosingParcelInstanceID() {
-        return enclosingParcelInstanceID;
+    // payloadCreator Bean/Helper methods
+    public boolean hasPayloadCreator() {
+        if (this.payloadCreator == null) {
+            return (false);
+        } else {
+            return (true);
+        }
     }
 
-    public void setEnclosingParcelInstanceID(FDN enclosingParcelInstanceID) {
-        this.enclosingParcelInstanceID = enclosingParcelInstanceID;
+    public FDNToken getPayloadCreator() {
+        return payloadCreator;
+    }
+
+    public void setPayloadCreator(FDNToken payloadCreator) {
+        this.payloadCreator = payloadCreator;
     }
 }

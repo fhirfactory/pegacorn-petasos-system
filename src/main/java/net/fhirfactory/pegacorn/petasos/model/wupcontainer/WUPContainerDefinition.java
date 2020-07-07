@@ -24,7 +24,7 @@ package net.fhirfactory.pegacorn.petasos.model.wupcontainer;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.RDN;
-import net.fhirfactory.pegacorn.petasos.core.agent.PetasosWUPContainerAgent;
+import net.fhirfactory.pegacorn.petasos.core.agent.WUPContainerResilienceAgent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ public class WUPContainerDefinition {
     private String egressIngresPoint;
     private String egressEgressPoint;
 
-    private PetasosWUPContainerAgent nodeAgent;
+    private WUPContainerResilienceAgent nodeAgent;
 
     public WUPContainerDefinition(FDN associatedWUPTypeID, FDN associatedWUPID){
         this.associatedWUPInstanceID = new FDN(associatedWUPID);

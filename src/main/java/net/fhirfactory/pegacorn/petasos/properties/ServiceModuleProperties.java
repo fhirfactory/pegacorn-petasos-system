@@ -26,7 +26,7 @@ import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.RDN;
 import net.fhirfactory.pegacorn.deploymentproperties.PetasosProperties;
 import net.fhirfactory.pegacorn.petasos.model.configuration.ServiceModulePropertiesInterface;
-import net.fhirfactory.pegacorn.petasos.core.node.common.PetasosNodeModeEnum;
+import net.fhirfactory.pegacorn.petasos.core.processingresilience.common.ResilienceModeEnum;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -38,8 +38,8 @@ public class ServiceModuleProperties implements ServiceModulePropertiesInterface
     PetasosProperties systemProperties;
 
     @Override
-    public PetasosNodeModeEnum getReliabilityMode(){
-        return(PetasosNodeModeEnum.PETASOS_NODE_MODE_STANDALONE);
+    public ResilienceModeEnum getReliabilityMode(){
+        return(ResilienceModeEnum.PETASOS_NODE_MODE_STANDALONE);
     }
 
     @Override

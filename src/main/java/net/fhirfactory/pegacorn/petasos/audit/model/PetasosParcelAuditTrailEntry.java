@@ -24,9 +24,8 @@ package net.fhirfactory.pegacorn.petasos.audit.model;
 
 import net.fhirfactory.pegacorn.common.model.FDNTokenSet;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
 import net.fhirfactory.pegacorn.petasos.model.uow.UoWProcessingOutcomeEnum;
-import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcelJobCard;
 import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
 
 import java.time.Instant;
@@ -43,7 +42,7 @@ public class PetasosParcelAuditTrailEntry {
     private FDNToken upstreamParcelID;
     private FDNToken primaryWUPInstanceID;
     private FDNToken parcelTypeID;
-    private PetasosParcelJobCard processingOutcome;
+    private ResilienceParcelJobCard processingOutcome;
     private Date parcelRegistrationDate;
     private Date parcelStartDate;
     private Date parcelFinishedDate;
@@ -53,7 +52,7 @@ public class PetasosParcelAuditTrailEntry {
     // Constructor(s)
     //
 
-    public PetasosParcelAuditTrailEntry(PetasosParcel theParcel ){
+    public PetasosParcelAuditTrailEntry(ResilienceParcel theParcel ){
         // First, we clean the slate
         this.auditTrailEntryDate = null;
         this.actualUoW = null;
@@ -75,12 +74,12 @@ public class PetasosParcelAuditTrailEntry {
             return;
         }
         this.auditTrailEntryDate = Date.from(Instant.now());
-        if(theParcel.hasAlternateWUPInstanceIDSet()) {
-            this.alternativeWUPInstanceIDSet = new FDNTokenSet(theParcel.getAlternateWUPInstanceIDSet());
-        }
+//        if(theParcel.hasAlternateWUPInstanceIDSet()) {
+//            this.alternativeWUPInstanceIDSet = new FDNTokenSet(theParcel.getAlternateWUPInstanceIDSet());
+//        }
         if( theParcel.hasActualUoW()) {
             this.actualUoW = theParcel.getActualUoW();
-            this.uowOutcome = this.actualUoW.getUowProcessingOutcome();
+            this.uowOutcome = this.actualUoW.getProcessingOutcome();
         }
         if(theParcel.hasParcelJobCard()){
             this.processingOutcome = theParcel.getParcelJobCard();
@@ -89,16 +88,16 @@ public class PetasosParcelAuditTrailEntry {
             this.downstreamParcelIDSet = new FDNTokenSet(theParcel.getDownstreamParcelIDSet());
         }
         if(theParcel.hasUpstreamParcelID()){
-            this.upstreamParcelID = theParcel.getUpstreamParcelID().getToken();
+            this.upstreamParcelID = theParcel.getUpstreamParcelID();
         }
         if(theParcel.hasParcelTypeID()){
-            this.parcelTypeID = theParcel.getParcelTypeID().getToken();
+            this.parcelTypeID = theParcel.getParcelTypeID();
         }
         if(theParcel.hasParcelFinalisationDate()){
             this.parcelFinalisedDate = theParcel.getParcelFinalisationDate();
         }
         if(theParcel.hasParcelInstanceID()){
-            this.parcelInstanceID = theParcel.getParcelInstanceID().getToken();
+            this.parcelInstanceID = theParcel.getParcelInstanceID();
         }
         if(theParcel.hasParcelFinishedDate()){
             this.parcelFinishedDate = theParcel.getParcelFinishedDate();
@@ -269,11 +268,11 @@ public class PetasosParcelAuditTrailEntry {
         return(true);
     }
 
-    public PetasosParcelJobCard getProcessingOutcome() {
+    public ResilienceParcelJobCard getProcessingOutcome() {
         return processingOutcome;
     }
 
-    public void setProcessingOutcome(PetasosParcelJobCard processingOutcome) {
+    public void setProcessingOutcome(ResilienceParcelJobCard processingOutcome) {
         this.processingOutcome = processingOutcome;
     }
 

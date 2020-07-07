@@ -25,54 +25,101 @@ package net.fhirfactory.pegacorn.petasos.core.servicemodule.manager;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.common.model.RDN;
+import net.fhirfactory.pegacorn.petasos.core.servicemodule.cache.ServiceModuleMapDM;
 import net.fhirfactory.pegacorn.petasos.model.servicemodule.ElementNameExtensions;
+import net.fhirfactory.pegacorn.petasos.model.servicemodule.LinkingRoute;
 import net.fhirfactory.pegacorn.petasos.model.servicemodule.MapElement;
-import net.fhirfactory.pegacorn.petasos.model.servicemodule.MapElementTypeEnum;
-import net.fhirfactory.pegacorn.petasos.core.node.standalone.cache.LocalNodeServiceModuleMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
+/**
+ * This class WILL do more in the future, but it is for now just a proxy to the
+ * ServiceModuleMapDM.
+ */
 @ApplicationScoped
 public class ServiceModuleIM {
     private static final Logger LOG = LoggerFactory.getLogger(ServiceModuleIM.class);
 
+    private static final Integer WUA_RETRY_LIMIT = 3;
+    private static final Integer WUA_TIMEOUT_LIMIT = 10000; // 10 Seconds
+    private static final Integer WUA_SLEEP_INTERVAL = 250; // 250 milliseconds
+    private static final Integer WUA_CLEAN_UP_AGE_LIMIT = 60*1000; // 60 Seconds
+
     @Inject
-    LocalNodeServiceModuleMap moduleMap;
+    ServiceModuleMapDM moduleMapDM;
 
     @Inject
     ElementNameExtensions nameExtensions;
 
-    public void registerWUP(FDNToken wupID){
-        LOG.debug(".registerWUP(): Entry, wupID --> {}", wupID );
-        // First we register our WUP
-        LOG.trace(".registerWUP(): Add the Work Unit Processor to the Service Module map");
-        MapElement newElement = new MapElement(wupID, MapElementTypeEnum.WORK_UNIT_PROCESSOR);
-        moduleMap.addElement(newElement);
-
-        // Then, we add the Ingres WUPContainer (associated to the WUP) to the ServiceModule map
-        LOG.trace(".registerWUP(): Add the associated Ingres WUPContainer to the Service Module map");
-        FDN wupFDN = new FDN(wupID);
-        RDN wupRDN = wupFDN.getUnqualifiedRDN();
-        String ingresWUPContainerNameValue = wupRDN.getNameValue() + "." + nameExtensions.getProcessorWupContainerIngresProcessor();
-        FDN ingresWUPContainerID = new FDN(wupFDN);
-        ingresWUPContainerID.appendRDN(new RDN("WUPContainer", ingresWUPContainerNameValue));
-
-        MapElement newWUPContainerIngresElement = new MapElement(ingresWUPContainerID.getToken(), MapElementTypeEnum.WUP_CONTAINER_INGRES_PROCESSOR);
-        moduleMap.addElement(newWUPContainerIngresElement);
-        // Now, add the Egress Contraption (associated to the WUP) to the ServiceModule map
-        LOG.trace(".registerWUP(): Add the associated Egress Contraptions to the Service Module map");
-        FDN egressContraptionFDN = new FDN(wupFDN);
-        String egressContraptionNameValue = wupRDN.getNameValue()+".Egress";
-        egressContraptionFDN.appendRDN(new RDN("Contraption", egressContraptionNameValue));
-        MapElement newEgressContraptionElement = new MapElement(egressContraptionFDN.getToken(), MapElementTypeEnum.CONTRAPTION_EGRESS);
-        moduleMap.addElement(newEgressContraptionElement);
-        // Now lets build all the Routes between the WUP and the various Contraption Elements
-        LOG.trace(".registerWUP(): Add the associated Routes between the WUP and Contraptions");
-        RDN
-        //
+    public void registerElement(MapElement newElement) {
+        LOG.debug(".registerElement(): Entry, newElement --> {}", newElement);
+        moduleMapDM.registerElement(newElement);
     }
+
+    public void unregisterElement(FDNToken elementID) {
+        LOG.debug(".unregisterElement(): Entry, elementID --> {}", elementID);
+        moduleMapDM.unregisterRoute(elementID);
+    }
+
+    public Set<MapElement> getElementSet() {
+        LOG.debug(".getElementSet(): Entry");
+        return(moduleMapDM.getElementSet());
+    }
+
+    public MapElement getElement(FDNToken elementID){
+        LOG.debug(".getElement(): Entry, elementID --> {}", elementID);
+        return(moduleMapDM.getElement(elementID));
+    }
+
+    public void registerCamelRoute(LinkingRoute newRoute) {
+        LOG.debug(".registerRoute(): Entry, newRoute --> {}", newRoute);
+        moduleMapDM.registerRoute(newRoute);
+    }
+
+    public void unregisterRoute(FDNToken routeID) {
+        LOG.debug(".unregisterRoute(): Entry, routeID --> {}", routeID);
+        moduleMapDM.unregisterRoute(routeID);
+    }
+
+    public Set<LinkingRoute> getRouteSet() {
+        LOG.debug(".getRouteSet(): Entry");
+        return(moduleMapDM.getRouteSet());
+    }
+
+    public LinkingRoute getRoute(FDNToken routeID){
+        LOG.debug(".getRoute(): Entry, routeID --> {}", routeID);
+        return(moduleMapDM.getRoute(routeID));
+    }
+
+    public FDN getModuleFunctionalContext(){
+        FDN myFDN = new FDN();
+        return(myFDN);
+    }
+
+    public FDN getModuleDeploymentContext(){
+        FDN myFDN = new FDN();
+        return(myFDN);
+    }
+
+    public Integer getWorkUnitActivityRetryLimit(){
+        return(WUA_RETRY_LIMIT);
+    }
+
+    public Integer getWorkUnitActivityTimeoutLimit(){
+        return(WUA_TIMEOUT_LIMIT);
+    }
+
+    public Integer getWorkUnitActivitySleepInterval(){
+        return(WUA_SLEEP_INTERVAL);
+    }
+
+    public Integer getWorkUnitActivityCleanUpAgeLimit(){
+        return(WUA_CLEAN_UP_AGE_LIMIT);
+    }
+
 }

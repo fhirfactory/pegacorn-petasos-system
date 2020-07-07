@@ -25,26 +25,27 @@ package net.fhirfactory.pegacorn.petasos.model.servicemodule;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
 
 public class LinkingRoute {
-    private FDNToken fromPoint;
-    private FDNToken toPoint;
+    private FDNToken fromEndpoint;
+    private FDNToken toEndpoint;
     private FDNToken routeToken;
     private String routeName;
     private LinkingRouteStatusEnum routeStatus;
+    private LinkingRouteTypeEnum routeType;
 
-    public FDNToken getFromPoint() {
-        return fromPoint;
+    public FDNToken getFromEndpoint() {
+        return fromEndpoint;
     }
 
-    public void setFromPoint(FDNToken fromPoint) {
-        this.fromPoint = fromPoint;
+    public void setFromEndpoint(FDNToken fromEndpoint) {
+        this.fromEndpoint = fromEndpoint;
     }
 
-    public FDNToken getToPoint() {
-        return toPoint;
+    public FDNToken getToEndpoint() {
+        return toEndpoint;
     }
 
-    public void setToPoint(FDNToken toPoint) {
-        this.toPoint = toPoint;
+    public void setToEndpoint(FDNToken toEndpoint) {
+        this.toEndpoint = toEndpoint;
     }
 
     public FDNToken getRouteToken() {
@@ -69,5 +70,13 @@ public class LinkingRoute {
 
     public void setRouteStatus(LinkingRouteStatusEnum routeStatus) {
         this.routeStatus = routeStatus;
+    }
+
+    public LinkingRouteTypeEnum getRouteType() {
+        return routeType;
+    }
+
+    public void setRouteType(LinkingRouteTypeEnum routeType) {
+        this.routeType = routeType;
     }
 }

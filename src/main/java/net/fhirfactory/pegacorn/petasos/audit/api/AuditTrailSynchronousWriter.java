@@ -24,7 +24,7 @@ package net.fhirfactory.pegacorn.petasos.audit.api;
 
 import net.fhirfactory.pegacorn.petasos.audit.forwarder.integration.HestiaAuditWriter;
 import net.fhirfactory.pegacorn.petasos.audit.model.PetasosParcelAuditTrailEntry;
-import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ public class AuditTrailSynchronousWriter {
     @Inject
     HestiaAuditWriter hestiaAuditLog;
 
-    public boolean synchronousWrite(PetasosParcel parcel){
+    public boolean synchronousWrite(ResilienceParcel parcel){
         PetasosParcelAuditTrailEntry newAuditEntry = new PetasosParcelAuditTrailEntry(parcel);
         boolean success = hestiaAuditLog.writeAuditEntry(newAuditEntry);
         return(success);

@@ -25,7 +25,7 @@ package net.fhirfactory.pegacorn.petasos.audit.api;
 
 import net.fhirfactory.pegacorn.petasos.audit.model.PetasosParcelAuditTrailEntry;
 import net.fhirfactory.pegacorn.petasos.audit.forwarder.asynchronous.PetasosAsynchronousWriterQueue;
-import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,7 @@ public class AuditTrailAsynchronousWriter {
     @Inject
     PetasosAsynchronousWriterQueue asynchronousWriterQueue;
 
-    public boolean asynchronousWrite(PetasosParcel parcel){
+    public boolean asynchronousWrite(ResilienceParcel parcel){
         PetasosParcelAuditTrailEntry newAuditEntry = new PetasosParcelAuditTrailEntry(parcel);
         boolean success = asynchronousWriterQueue.addAuditEntryToQueue(newAuditEntry);
         return(success);

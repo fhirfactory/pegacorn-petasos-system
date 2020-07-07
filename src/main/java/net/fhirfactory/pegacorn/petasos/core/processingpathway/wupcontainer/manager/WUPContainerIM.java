@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2020 mhunter
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package net.fhirfactory.pegacorn.petasos.core.processingpathway.wupcontainer.manager;
+
+import net.fhirfactory.pegacorn.common.model.FDN;
+import net.fhirfactory.pegacorn.petasos.model.servicemodule.MapElement;
+import net.fhirfactory.pegacorn.petasos.model.wupcontainer.WUPContainerDefinition;
+
+import net.fhirfactory.pegacorn.petasos.core.processingpathway.wupcontainer.worker.WUPContainerIngresProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class WUPContainerIM {
+    private static final Logger LOG = LoggerFactory.getLogger(WUPContainerIM.class);
+
+    private WUPContainerIngresProcessor processorBlock;
+    private WUPContainerDefinition contraption;
+
+    public WUPContainerIM(FDN wupTypeID, FDN wupInstanceID) {
+        contraption = new WUPContainerDefinition(wupTypeID, wupInstanceID);
+    }
+
+    /**
+     * Builds the set of associated ServiceModule Elements (WUPContainer.IngresProcessor, WUPContainer.EgressProcessor)
+     * and assoicated Routes between these elements and the actual WUP itself.
+     *
+     * Specifically, the following MapElements are generated and bound to the WUP:
+     *
+     * [Incoming Traffic]: An Interchange connects to --
+     * [Endpoint]: wupID.WUPContainer.IngresProcessor.Ingres --> connects to
+     * [Processor]: wupID.WUPContainer.IngresProcessor --> connects to
+     * [Endpoint]: wupID.WUPContainer.IngresProcessor.Egress -->  connects to
+     * [Route]: From-wupID.WUPContainer.IngresProcessor.Egress-To-wupID.Ingres
+     * [Route]: From-wupID.Egress-To-wupID.WUPContainer.EgressProcessor.Ingres
+     * [Endpoint]: wupID.WUPContainer.EgressProcessor.Ingres --> connects to
+     * [Processor]: wupID.WUPContainer.EgressProcessor --> connects to
+     * [EndPoint]: wupID.WUPContainer.EgressProcessor.Egress (available to connect to an Interchange)
+     *
+     * @param wupElement The Work Unit Processor (WUP) which we want to encapsulate in this WUPContainer.
+     */
+    public void buildWUPContainer(MapElement wupElement) {
+    }
+}

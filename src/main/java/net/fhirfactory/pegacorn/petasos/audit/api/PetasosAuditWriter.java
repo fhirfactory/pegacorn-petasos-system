@@ -22,7 +22,7 @@
 
 package net.fhirfactory.pegacorn.petasos.audit.api;
 
-import net.fhirfactory.pegacorn.petasos.model.parcel.PetasosParcel;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,7 @@ public class PetasosAuditWriter {
     @Inject
     AuditTrailSynchronousWriter synchAuditWriter;
 
-    public boolean writeAuditEntry(PetasosParcel parcel, boolean isSynchrnous){
+    public boolean writeAuditEntry(ResilienceParcel parcel, boolean isSynchrnous){
         boolean success;
         if(isSynchrnous){
             success = synchAuditWriter.synchronousWrite(parcel);

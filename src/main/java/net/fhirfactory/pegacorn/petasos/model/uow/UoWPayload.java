@@ -28,16 +28,19 @@ import net.fhirfactory.pegacorn.common.model.FDNToken;
  */
 public class UoWPayload {
     private FDNToken payloadType;
+    private FDNToken payloadCreator;
     private String payload;
 
     public UoWPayload() {
         payloadType = null;
         payload = null;
+        payloadCreator = null;
     }
 
     public UoWPayload(UoWPayload originalUoWPayload) {
         payloadType = new FDNToken(originalUoWPayload.getPayloadType());
         payload = new String(originalUoWPayload.getPayload());
+        payloadCreator = new FDNToken(originalUoWPayload.getPayloadCreator());
     }
 
     public UoWPayload(FDNToken payloadType, String payloadContent){
@@ -59,5 +62,13 @@ public class UoWPayload {
 
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public FDNToken getPayloadCreator() {
+        return payloadCreator;
+    }
+
+    public void setPayloadCreator(FDNToken payloadCreator) {
+        this.payloadCreator = payloadCreator;
     }
 }
