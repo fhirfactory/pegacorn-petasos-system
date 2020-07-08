@@ -20,20 +20,28 @@
  * SOFTWARE.
  */
 
-package net.fhirfactory.pegacorn.petasos.model.resilience.parcel;
+package net.fhirfactory.pegacorn.petasos.core.processingpathway.wupcontainer.worker;
 
-public enum ResilienceParcelFinalisationStatusEnum {
-    PARCEL_FINALISATION_STATUS_NOT_FINALISED("pegacorn.petasos.parcel.finalisation.status.not_finalised"),
-    PARCEL_FINALISATION_STATUS_PARTIALLY_FINALISED("pegacorn.petasos.parcel.finalisation.status.partially_finalised"),
-    PARCEL_FINALISATION_STATUS_FINALISED("pegacorn.petasos.parcel.finalisation.status.finalised");
+import net.fhirfactory.pegacorn.common.model.FDNToken;
+import net.fhirfactory.pegacorn.petasos.core.PetasosServicesBroker;
+import net.fhirfactory.pegacorn.petasos.model.pathway.WorkUnitTransportPacket;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
+import org.apache.camel.Exchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    private String petasosParcelFinalisationStatus;
+import javax.inject.Inject;
 
-    private ResilienceParcelFinalisationStatusEnum(String petasosParcelFinalisationStatus){
-        this.petasosParcelFinalisationStatus = petasosParcelFinalisationStatus;
-    }
+public class WUPContainerIngresGatekeeper {
+    private static final Logger LOG = LoggerFactory.getLogger(WUPContainerIngresGatekeeper.class);
 
-    public String getPetasosParcelFinalisationStatus(){
-        return(this.petasosParcelFinalisationStatus);
+    @Inject
+    PetasosServicesBroker petasosServicesBroker;
+
+    public UoW ingresGatekeeper(WorkUnitTransportPacket ingresPacket, Exchange camelExchange) {
+
+        UoW currentUoW = ingresPacket.getPayload();
+
+        return(currentUoW);
     }
 }

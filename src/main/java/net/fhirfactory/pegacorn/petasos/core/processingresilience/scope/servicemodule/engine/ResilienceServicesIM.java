@@ -26,10 +26,9 @@ import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.deploymentproperties.PetasosProperties;
 import net.fhirfactory.pegacorn.petasos.audit.api.PetasosAuditWriter;
-import net.fhirfactory.pegacorn.petasos.core.processingresilience.scope.servicemodule.cache.ServiceModuleActivityMatrixDM;
 import net.fhirfactory.pegacorn.petasos.core.processingresilience.scope.servicemodule.cache.ServiceModuleParcelCacheDM;
-import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ParcelStatusElement;
-import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ResilienceParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.pathway.ContinuityID;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelProcessingStatusEnum;
 import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
 import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelFinalisationStatusEnum;
 import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
@@ -65,25 +64,25 @@ public class ResilienceServicesIM {
         this.nodeInstanceFDN = new FDN();
     }
 
-    public ResilienceParcel registerParcel(FDNToken wupTypeID, FDNToken wupInstanceID, FDNToken upstreamParcelID, UoW unitOfWork, boolean synchronousWriteToAudit) {
-        LOG.debug(".registerParcel(): Entry, wupTypeID --> {}, wupInstanceID --> {}, upstreamParcelID --> {}, synchronousWriteToAudit -->{}", wupTypeID, wupInstanceID, upstreamParcelID, synchronousWriteToAudit);
-        if ((unitOfWork == null) || (wupTypeID == null) || (wupInstanceID==null)) {
+    public ResilienceParcel registerParcel(ContinuityID activityID, UoW unitOfWork, boolean synchronousWriteToAudit) {
+        LOG.debug(".registerParcel(): Entry, activityID --> {}, unitOfWork --> {}, synchronousWriteToAudit -->{}", activityID, unitOfWork, synchronousWriteToAudit);
+        if ((unitOfWork == null) || (activityID == null)) {
             throw (new IllegalArgumentException("unitOfWork, wupTypeID or wupInstanceID are null in method invocation"));
         }
         // 1st, lets register the parcel
         LOG.trace(".registerParcel(): check for existing ResilienceParcel instance for this WUP/UoW combination");
-        ResilienceParcel parcelInstance =  parcelCacheDM.getCurrentParcelForWUP(wupInstanceID, unitOfWork.getInstanceID());
+        ResilienceParcel parcelInstance =  parcelCacheDM.getCurrentParcelForWUP(activityID.getPresentParcelInstanceID(), unitOfWork.getInstanceID());
         if(parcelInstance != null){
             LOG.trace(".registerParcel(): Well, there seems to be a Parcel already for this WUPInstanceID/UoWInstanceID. Odd, but let's use it!");
         } else {
-            LOG.trace(".registerParcel(): Attempted to retrieve existing ResilienceParcel, and there wans't one, so let's create it!");
-            parcelInstance = new ResilienceParcel(wupInstanceID, unitOfWork.getTypeID(), unitOfWork, upstreamParcelID);
+            LOG.trace(".registerParcel(): Attempted to retrieve existing ResilienceParcel, and there wasn't one, so let's create it!");
+            parcelInstance = new ResilienceParcel(activityID, unitOfWork);
             parcelCacheDM.addParcel(parcelInstance);
             Date registrationDate = Date.from(Instant.now());
             LOG.trace(".registerParcel(): Set the Registration Date --> {}", registrationDate);
-            parcelInstance.setParcelRegistrationDate(registrationDate);
+            parcelInstance.setRegistrationDate(registrationDate);
             LOG.trace(".registerParcel(): Set the Parcel Finalisation Status --> {} ", ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
-            parcelInstance.setParcelFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
+            parcelInstance.setFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
             LOG.trace(".registerParcel(): Set the Parcel Processing Status --> {}", ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_REGISTERED);
             parcelInstance.setProcessingStatus(ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_REGISTERED);
             LOG.trace(".registerParcel(): Doing an Audit Write");
@@ -105,9 +104,9 @@ public class ResilienceServicesIM {
         ResilienceParcel currentParcel = parcelCacheDM.getParcelInstance(parcelID);
         Date startDate = Date.from(Instant.now());
         LOG.trace(".notifyParcelProcessingStart(): Set the Start Date --> {}", startDate);
-        currentParcel.setParcelStartDate(startDate);
+        currentParcel.setStartDate(startDate);
         LOG.trace(".notifyParcelProcessingStart(): Set the Parcel Finalisation Status --> {} ", ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
-        currentParcel.setParcelFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
+        currentParcel.setFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
         LOG.trace(".notifyParcelProcessingStart(): Set the Parcel Processing Status --> {}", ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_ACTIVE);
         currentParcel.setProcessingStatus(ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_ACTIVE);
         // TODO Check to see if we should do an Audit Entry when we start processing (as well as when it is registered)
@@ -130,9 +129,9 @@ public class ResilienceServicesIM {
         currentParcel.getActualUoW().setProcessingOutcome(unitOfWork.getProcessingOutcome());
         Date finishDate = Date.from(Instant.now());
         LOG.trace(".notifyParcelProcessingFinish(): Set the Finish Date --> {}", finishDate);
-        currentParcel.setParcelFinishedDate(finishDate);
+        currentParcel.setFinishedDate(finishDate);
         LOG.trace(".notifyParcelProcessingFinish(): Set the Parcel Finalisation Status --> {} ", ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
-        currentParcel.setParcelFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
+        currentParcel.setFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
         LOG.trace(".notifyParcelProcessingFinish(): Set the Parcel Processing Status --> {}", ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_FINISHED);
         currentParcel.setProcessingStatus(ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_FINISHED);
         // TODO Check to see if we should do an Audit Entry when we finish processing
@@ -155,9 +154,9 @@ public class ResilienceServicesIM {
         currentParcel.getActualUoW().setProcessingOutcome(unitOfWork.getProcessingOutcome());
         Date finishDate = Date.from(Instant.now());
         LOG.trace(".notifyParcelProcessingFailure(): Set the Finish Date --> {}", finishDate);
-        currentParcel.setParcelFinishedDate(finishDate);
+        currentParcel.setFinishedDate(finishDate);
         LOG.trace(".notifyParcelProcessingFailure(): Set the Parcel Finalisation Status --> {} ", ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
-        currentParcel.setParcelFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
+        currentParcel.setFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
         LOG.trace(".notifyParcelProcessingFailure(): Set the Parcel Processing Status --> {}", ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_FAILED);
         currentParcel.setProcessingStatus(ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_FAILED);
         LOG.trace(".notifyParcelProcessingFailure(): Doing an Audit Write, note that it is asynchronous by desgin");
@@ -174,16 +173,16 @@ public class ResilienceServicesIM {
         LOG.trace(".notifyParcelProcessingFinalisation(): retrieve existing Parcel");
         ResilienceParcel currentParcel = parcelCacheDM.getParcelInstance(parcelID);
         LOG.trace(".notifyParcelProcessingFinalisation(): checking to see if finish date has been set and, if not, setting it");
-        if(!currentParcel.hasParcelFinishedDate()) {
+        if(!currentParcel.hasFinishedDate()) {
             Date finishDate = Date.from(Instant.now());
             LOG.trace(".notifyParcelProcessingFinalisation(): Set the Finish Date --> {}", finishDate);
-            currentParcel.setParcelFinishedDate(finishDate);
+            currentParcel.setFinishedDate(finishDate);
         }
         Date finalisationDate = Date.from(Instant.now());
         LOG.trace(".notifyParcelProcessingFinalisation(): Set the Finalisation Date --> {}", finalisationDate);
-        currentParcel.setParcelFinalisationDate(finalisationDate);
+        currentParcel.setFinalisationDate(finalisationDate);
         LOG.trace(".notifyParcelProcessingFinalisation(): Set the Parcel Finalisation Status --> {} ", ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_FINALISED);
-        currentParcel.setParcelFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_FINALISED);
+        currentParcel.setFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_FINALISED);
         LOG.trace(".notifyParcelProcessingFinalisation(): Set the Parcel Processing Status --> {}", ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_FINALISED);
         currentParcel.setProcessingStatus(ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_FINALISED);
         LOG.trace(".notifyParcelProcessingFinalisation(): Doing an Audit Write, note that it is asynchronous by design");
@@ -198,11 +197,9 @@ public class ResilienceServicesIM {
             throw (new IllegalArgumentException(".notifyParcelProcessingPurge(): parcelID is null in method invocation"));
         }
         LOG.trace(".notifyParcelProcessingPurge(): retrieve existing Parcel");
-        ResilienceParcel currentParcel = parcelCacheDM.getParcelInstance(parcelID);
         // TODO: Ascertain if we need to do an audit-entry for this.
         //        LOG.trace(".notifyParcelProcessingPurge(): Doing an Audit Write, note that it is asynchronous by design");
         //        auditWriter.writeAuditEntry(currentParcel,false);
-        LOG.debug(".notifyParcelProcessingPurge(): Exit, returning finished Parcel --> {}", currentParcel);
-        parcelCacheDM.removeParcel(parcelID);
+        //LOG.debug(".notifyParcelProcessingPurge(): Exit, returning finished Parcel --> {}", currentParcel);
     }
 }

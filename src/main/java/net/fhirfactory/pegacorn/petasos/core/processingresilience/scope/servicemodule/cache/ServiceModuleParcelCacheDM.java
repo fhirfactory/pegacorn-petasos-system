@@ -29,11 +29,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Singleton;
 
 import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
-import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ResilienceParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelProcessingStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
 
 @Singleton
@@ -55,7 +54,7 @@ public class ServiceModuleParcelCacheDM {
         if (!parcel.hasParcelInstanceID()) {
             return;
         }
-        FDNToken parcelInstanceID = parcel.getParcelInstanceID();
+        FDNToken parcelInstanceID = parcel.getInstanceID();
         petasosParcelCache.put(parcelInstanceID, parcel);
     }
 
@@ -75,7 +74,7 @@ public class ServiceModuleParcelCacheDM {
         if (!parcel.hasParcelInstanceID()) {
             return;
         }
-        petasosParcelCache.remove(parcel.getParcelInstanceID());
+        petasosParcelCache.remove(parcel.getInstanceID());
     }
 
     public void removeParcel(FDNToken parcelInstanceID) {
@@ -139,7 +138,7 @@ public class ServiceModuleParcelCacheDM {
         while (parcelListIterator.hasNext()) {
             ResilienceParcel currentParcel = parcelListIterator.next();
             if (currentParcel.hasParcelTypeID()) {
-                if (currentParcel.getParcelTypeID().equals(parcelTypeID)) {
+                if (currentParcel.getTypeID().equals(parcelTypeID)) {
                     parcelList.add(currentParcel);
                 }
             }
@@ -152,10 +151,10 @@ public class ServiceModuleParcelCacheDM {
         if (newParcel == null) {
             throw (new IllegalArgumentException("newParcel is null"));
         }
-        if (petasosParcelCache.containsKey(newParcel.getParcelInstanceID())) {
-            petasosParcelCache.remove(newParcel.getParcelInstanceID());
+        if (petasosParcelCache.containsKey(newParcel.getInstanceID())) {
+            petasosParcelCache.remove(newParcel.getInstanceID());
         }
-        petasosParcelCache.put(newParcel.getParcelInstanceID(), newParcel);
+        petasosParcelCache.put(newParcel.getInstanceID(), newParcel);
     }
 
     public ResilienceParcel getCurrentParcelForWUP(FDNToken wupInstanceID, FDNToken uowInstanceID) {

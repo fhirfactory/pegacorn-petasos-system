@@ -31,7 +31,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
-import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ResilienceParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelProcessingStatusEnum;
 import org.apache.camel.CamelContext;
 import org.infinispan.Cache;
 import org.infinispan.manager.DefaultCacheManager;
@@ -81,7 +81,7 @@ public class ClusteredGeneralParcelMap {
     	if(!parcel.hasParcelInstanceID()) {
     		return;
     	}
-    	FDNToken parcelID = parcel.getParcelInstanceID();
+    	FDNToken parcelID = parcel.getInstanceID();
     	petasosParcelCache.put(parcelID, parcel);
     }
     
@@ -93,7 +93,7 @@ public class ClusteredGeneralParcelMap {
     	if(!parcel.hasParcelInstanceID()) {
     		return;
     	}
-    	petasosParcelCache.remove(parcel.getParcelInstanceID());
+    	petasosParcelCache.remove(parcel.getInstanceID());
     }
     
     public void removeParcel(FDN parcelInstanceID) {

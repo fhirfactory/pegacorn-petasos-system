@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 MAHun
+ * Copyright (c) 2020 Mark A. Hunter (ACT Health)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,42 @@
  * SOFTWARE.
  */
 
-package net.fhirfactory.pegacorn.petasos.model.resilience.parcel;
+package net.fhirfactory.pegacorn.petasos.core.processingresilience.scope.servicemodule.cache;
 
-public enum ResilienceParcelFinalisationStatusEnum {
-    PARCEL_FINALISATION_STATUS_NOT_FINALISED("pegacorn.petasos.parcel.finalisation.status.not_finalised"),
-    PARCEL_FINALISATION_STATUS_PARTIALLY_FINALISED("pegacorn.petasos.parcel.finalisation.status.partially_finalised"),
-    PARCEL_FINALISATION_STATUS_FINALISED("pegacorn.petasos.parcel.finalisation.status.finalised");
+import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-    private String petasosParcelFinalisationStatus;
+import static org.junit.jupiter.api.Assertions.*;
 
-    private ResilienceParcelFinalisationStatusEnum(String petasosParcelFinalisationStatus){
-        this.petasosParcelFinalisationStatus = petasosParcelFinalisationStatus;
+class ServiceModuleParcelCacheDMTest extends TestCase {
+
+
+    @Test
+    void addParcel() {
     }
 
-    public String getPetasosParcelFinalisationStatus(){
-        return(this.petasosParcelFinalisationStatus);
+    @Test
+    void getParcelInstance() {
+    }
+
+    @Test
+    void removeParcel() {
+    }
+
+    @Test
+    void testRemoveParcel() {
+    }
+
+    @Test
+    void getParcelByParcelType() {
+    }
+
+    @Test
+    void updateParcel() {
+    }
+
+    @Test
+    void getCurrentParcelForWUP() {
     }
 }

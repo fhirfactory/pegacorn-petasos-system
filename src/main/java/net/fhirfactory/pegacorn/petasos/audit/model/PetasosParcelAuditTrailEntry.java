@@ -85,28 +85,28 @@ public class PetasosParcelAuditTrailEntry {
             this.processingOutcome = theParcel.getParcelJobCard();
         }
         if(theParcel.hasDownstreamParcelIDSet()){
-            this.downstreamParcelIDSet = new FDNTokenSet(theParcel.getDownstreamParcelIDSet());
+            this.downstreamParcelIDSet = new FDNTokenSet(theParcel.getDownstreamEpisodeIDSet());
         }
         if(theParcel.hasUpstreamParcelID()){
-            this.upstreamParcelID = theParcel.getUpstreamParcelID();
+            this.upstreamParcelID = theParcel.getUpstreamEpisodeID();
         }
         if(theParcel.hasParcelTypeID()){
-            this.parcelTypeID = theParcel.getParcelTypeID();
+            this.parcelTypeID = theParcel.getTypeID();
         }
         if(theParcel.hasParcelFinalisationDate()){
-            this.parcelFinalisedDate = theParcel.getParcelFinalisationDate();
+            this.parcelFinalisedDate = theParcel.getFinalisationDate();
         }
         if(theParcel.hasParcelInstanceID()){
-            this.parcelInstanceID = theParcel.getParcelInstanceID();
+            this.parcelInstanceID = theParcel.getInstanceID();
         }
         if(theParcel.hasParcelFinishedDate()){
-            this.parcelFinishedDate = theParcel.getParcelFinishedDate();
+            this.parcelFinishedDate = theParcel.getFinishedDate();
         }
         if(theParcel.hasParcelRegistrationDate()){
-            this.parcelRegistrationDate = theParcel.getParcelRegistrationDate();
+            this.parcelRegistrationDate = theParcel.getRegistrationDate();
         }
         if(theParcel.hasParcelStartDate()){
-            this.parcelStartDate = theParcel.getParcelStartDate();
+            this.parcelStartDate = theParcel.getStartDate();
         }
 
     }

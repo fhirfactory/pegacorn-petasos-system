@@ -19,29 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix;
 
-/**
- *
- * @author ACT Health (Mark A. Hunter)
- */
-public enum ResilienceParcelProcessingStatusEnum {
-    PARCEL_STATUS_REGISTERED("pegacorn.petasos.parcel.status.registered"),
-    PARCEL_STATUS_INITIATED("pegacorn.petasos.parcel.status.initiated"),
-    PARCEL_STATUS_ACTIVE("pegacorn.petasos.parcel.status.active"),
-    PARCEL_STATUS_FINISHED("pegacorn.petasos.parcel.status.finished"),
-    PARCEL_STATUS_FINALISED("pegacorn.petasos.parcel.status.finalised"),
-    PARCEL_STATUS_FAILED("pegacorn.petasos.agent.parcel.status.failed"),
-	PARCEL_STATUS_FINISHED_ELSEWHERE("pegacorn.petasos.parcel.status.finsihed_elsewhere"),
-	PARCEL_STATUS_FINALISED_ELSEWHERE("pegacorn.petasos.parcel.status.finalised_elsewhere");
-    
-    private String petasosParcelStatus;
-    
-    private ResilienceParcelProcessingStatusEnum(String petasosParcelStatus){
-        this.petasosParcelStatus = petasosParcelStatus;
+public enum ParcelFinalisationRegistrationStatusEnum {
+    PARCEL_FINALISATION_STATUS_NOT_REGISTERED("pegacorn.petasos.parcel.successor.status.not_registered"),
+    PARCEL_FINALISATION_STATUS_REGISTERED("pegacorn.petasos.parcel.successor.status.registered");
+
+    private String successorParcelStatus;
+
+    private ParcelFinalisationRegistrationStatusEnum(String petasosParcelFinalisationStatus){
+        this.successorParcelStatus = petasosParcelFinalisationStatus;
     }
-    
-    public String getPetasosParcelStatus(){
-        return(this.petasosParcelStatus);
-    }    
+
+    public String getSuccessorParcelStatus(){
+        return(this.successorParcelStatus);
+    }
 }

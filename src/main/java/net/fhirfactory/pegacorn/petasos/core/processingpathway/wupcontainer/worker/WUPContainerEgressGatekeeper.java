@@ -20,20 +20,16 @@
  * SOFTWARE.
  */
 
-package net.fhirfactory.pegacorn.petasos.model.resilience.parcel;
+package net.fhirfactory.pegacorn.petasos.core.processingpathway.wupcontainer.worker;
 
-public enum ResilienceParcelFinalisationStatusEnum {
-    PARCEL_FINALISATION_STATUS_NOT_FINALISED("pegacorn.petasos.parcel.finalisation.status.not_finalised"),
-    PARCEL_FINALISATION_STATUS_PARTIALLY_FINALISED("pegacorn.petasos.parcel.finalisation.status.partially_finalised"),
-    PARCEL_FINALISATION_STATUS_FINALISED("pegacorn.petasos.parcel.finalisation.status.finalised");
+import net.fhirfactory.pegacorn.common.model.FDNToken;
+import net.fhirfactory.pegacorn.petasos.model.pathway.WorkUnitTransportPacket;
+import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
+import org.apache.camel.Exchange;
 
-    private String petasosParcelFinalisationStatus;
+public class WUPContainerEgressGatekeeper {
 
-    private ResilienceParcelFinalisationStatusEnum(String petasosParcelFinalisationStatus){
-        this.petasosParcelFinalisationStatus = petasosParcelFinalisationStatus;
-    }
+    public WorkUnitTransportPacket egressGatekeeper(UoW theUoW, Exchange camelExchange, FDNToken wupTypeID, FDNToken wupInstanceID) {
 
-    public String getPetasosParcelFinalisationStatus(){
-        return(this.petasosParcelFinalisationStatus);
     }
 }

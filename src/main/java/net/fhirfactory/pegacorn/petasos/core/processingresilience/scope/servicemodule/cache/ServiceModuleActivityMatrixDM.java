@@ -29,9 +29,8 @@ import net.fhirfactory.pegacorn.petasos.model.pathway.ContinuityID;
 import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ParcelFinalisationStatusSet;
 import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ParcelStatusElement;
 import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ParcelStatusElementSet;
-import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ResilienceParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelProcessingStatusEnum;
 import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
-import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelFinalisationStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,10 +118,10 @@ public class ServiceModuleActivityMatrixDM {
         } else {
             LOG.trace(".registerWorkUnitActivity(): Could not find a registered parcel for the supplied parcelInstanceID, adding it");
             ContinuityID newID = new ContinuityID();
-            newID.setPresentResilienceParcelInstanceID(parcelInstanceID);
+            newID.setPresentParcelInstanceID(parcelInstanceID);
             newID.setPresentWUPInstanceID(wupInstanceID);
             newID.setPresentWUPTypeID(wupTypeID);
-            newID.setPresentResilienceParcelOccurrenceKey(parcelEpisodeID);
+            newID.setPresentParcelEpisodeID(parcelEpisodeID);
             ParcelStatusElement newElement = elementSet.addElement(newID);
             LOG.trace(".registerWorkUnitActivity(): Check to see if someone has Focus (within Cluster and SystemWide)");
             ParcelStatusElement systemWideFocusedElement = elementSet.getSiteWideFocusElement();
@@ -220,11 +219,11 @@ public class ServiceModuleActivityMatrixDM {
                             currentElement.setParcelStatus(ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_REGISTERED);
                             currentElement.setRequiresRetry(true);
                             ResilienceParcel currentParcel = parcelCacheDM.getParcelInstance(currentParcelInstanceID);
-                            currentParcel.setParcelFinishedDate(null);
-                            currentParcel.setParcelStartDate(null);
-                            currentParcel.setParcelRegistrationDate(Date.from(Instant.now()));
-                            currentParcel.setParcelFinalisationDate(null);
-                            currentParcel.setParcelFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
+                            currentParcel.setFinishedDate(null);
+                            currentParcel.setStartDate(null);
+                            currentParcel.setRegistrationDate(Date.from(Instant.now()));
+                            currentParcel.setFinalisationDate(null);
+                            currentParcel.setFinalisationStatus(ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED);
                             currentParcel.setProcessingStatus(ResilienceParcelProcessingStatusEnum.PARCEL_STATUS_REGISTERED);
                             break;
                         }

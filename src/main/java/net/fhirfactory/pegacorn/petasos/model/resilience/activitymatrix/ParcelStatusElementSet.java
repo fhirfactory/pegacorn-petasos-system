@@ -52,10 +52,10 @@ public class ParcelStatusElementSet {
         }
         ParcelStatusElement newElement = new ParcelStatusElement(activityID);
         newElement.setHasClusterFocus(true);
-        if(parcelInstanceSet.containsKey(activityID.getPresentResilienceParcelInstanceID())){
-            parcelInstanceSet.replace(activityID.getPresentResilienceParcelInstanceID(), newElement);
+        if(parcelInstanceSet.containsKey(activityID.getPresentParcelInstanceID())){
+            parcelInstanceSet.replace(activityID.getPresentParcelInstanceID(), newElement);
         } else {
-            parcelInstanceSet.put(activityID.getPresentResilienceParcelInstanceID(), newElement);
+            parcelInstanceSet.put(activityID.getPresentParcelInstanceID(), newElement);
         }
         return(newElement);
     }

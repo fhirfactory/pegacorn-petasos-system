@@ -23,6 +23,7 @@ package net.fhirfactory.pegacorn.petasos.model.wup;
 
 import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.petasos.model.pathway.ContinuityID;
+import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ParcelStatusElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,51 +39,29 @@ public class WUPJobCard {
     private WUPActivityStatusEnum suggestedStatus;
     private WUPClusterModeEnum clusterMode;
     private WUPSystemModeEnum systemMode;
+    private boolean toBeDiscarded;
 
     private String toStringValue;
 
-    public WUPJobCard(ContinuityID wupContinuityRecord, WUPActivityStatusEnum currentStatus, WUPActivityStatusEnum suggestedStatus, WUPClusterModeEnum clusterMode, WUPSystemModeEnum systemMode, Date updateDate) {
+    public WUPJobCard(ContinuityID activityID, WUPActivityStatusEnum currentStatus, WUPActivityStatusEnum suggestedStatus, WUPClusterModeEnum clusterMode, WUPSystemModeEnum systemMode, Date updateDate) {
         this.cardID = null;
-        updateDate = null;
-        currentStatus = null;
-        suggestedStatus = null;
-        clusterMode = null;
-        systemMode=  null;
-        toStringValue = null;
+        this.updateDate = null;
+        this.currentStatus = null;
+        this.suggestedStatus = null;
+        this.clusterMode = null;
+        this.systemMode = null;
+        this.toStringValue = null;
 
-        if ((wupContinuityRecord==null)) {
+        if ((activityID == null)) {
             throw (new IllegalArgumentException("WUP Continuity Record is null in Constructor"));
         }
         this.updateDate = updateDate;
         this.currentStatus = currentStatus;
         this.clusterMode = clusterMode;
-        this.cardID = new ContinuityID(wupContinuityRecord);
+        this.cardID = new ContinuityID(activityID);
         this.suggestedStatus = suggestedStatus;
         this.systemMode = systemMode;
-        generateToString();
-    }
-
-    public WUPJobCard(FDNToken wupTypeID, FDNToken wupInstanceID, FDNToken currentParcelID, WUPActivityStatusEnum currentStatus, WUPActivityStatusEnum suggestedStatus, WUPClusterModeEnum clusterMode, WUPSystemModeEnum systemMode, Date updateDate) {
-        this.cardID = null;
-        this.currentStatus = null;
-        this.suggestedStatus = null;
-        this.clusterMode = null;
-        this.systemMode = null;
-        toStringValue = null;
-
-        if (wupInstanceID == null) {
-            throw (new IllegalArgumentException("WUP Instance Identifier (FDN wupInstanceID) is null in Constructor"));
-        }
-        this.updateDate = updateDate;
-        this.currentStatus = currentStatus;
-        this.clusterMode = clusterMode;
-        this.suggestedStatus = suggestedStatus;
-        this.systemMode = systemMode;
-        ContinuityID newCardID = new ContinuityID();
-        newCardID.setPresentWUPTypeID(wupTypeID);
-        newCardID.setPresentWUPInstanceID(wupInstanceID);
-        newCardID.setPresentResilienceParcelInstanceID(currentParcelID);
-        this.cardID = newCardID;
+        this.toBeDiscarded = false;
         generateToString();
     }
 
@@ -97,6 +76,10 @@ public class WUPJobCard {
         this.suggestedStatus = originalCard.getSuggestedStatus();
         this.systemMode = originalCard.getSystemMode();
         generateToString();
+    }
+
+    public boolean isToBeDiscarded() {
+        return (this.toBeDiscarded);
     }
 
     // Helper/accessor methods for the cardID attribute
@@ -215,8 +198,9 @@ public class WUPJobCard {
                 + updateDateString + ","
                 + currentStatusString + ","
                 + suggestedStatusString + ","
-                + systemModeString + "'"
-                + clusterModeString + "}";
+                + systemModeString + ","
+                + clusterModeString + ","
+                + "(toBeDiscarded=" + this.toBeDiscarded + ")}";
     }
 
     boolean hasSuggestedStatus() {
@@ -236,11 +220,11 @@ public class WUPJobCard {
         generateToString();
     }
 
-    public boolean hasSystemMode(){
-        if(this.systemMode==null){
-            return(false);
+    public boolean hasSystemMode() {
+        if (this.systemMode == null) {
+            return (false);
         } else {
-            return(true);
+            return (true);
         }
     }
 

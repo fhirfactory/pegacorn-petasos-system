@@ -26,16 +26,17 @@ import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.petasos.core.agent.WUPContainerResilienceAgent;
 import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
-import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ResilienceParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelProcessingStatusEnum;
 import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
 import net.fhirfactory.pegacorn.petasos.model.uow.UoWProcessingOutcomeEnum;
+import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WUPContainerEgressProcessor extends WUPContainerProcessorBase{
     private static final Logger LOG = LoggerFactory.getLogger(WUPContainerEgressProcessor.class);
 
-    public UoW egressContentProcessor(UoW incomingUoW, String wupIDAsTokenString) {
+    public UoW egressContentProcessor(UoW incomingUoW, Exchange camelExchange, FDNToken wupTypeID, FDNToken wupInstanceID) {
         LOG.debug(".egressContentProcessor(): Enter, incomingUoW --> {}, wupIDAsTokenString -->", incomingUoW, wupIDAsTokenString);
         UoW uowOutput = new UoW;
         WUPContainerResilienceAgent localAgent = new WUPContainerResilienceAgent();

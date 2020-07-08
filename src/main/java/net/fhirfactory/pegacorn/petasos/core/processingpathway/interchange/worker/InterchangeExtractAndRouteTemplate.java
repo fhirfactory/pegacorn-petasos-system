@@ -23,6 +23,7 @@
 package net.fhirfactory.pegacorn.petasos.core.processingpathway.interchange.worker;
 
 import net.fhirfactory.pegacorn.common.model.FDNToken;
+import net.fhirfactory.pegacorn.petasos.core.processingpathway.naming.RouteElementNames;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
@@ -32,26 +33,37 @@ public class InterchangeExtractAndRouteTemplate extends RouteBuilder {
     private static final Logger LOG = LoggerFactory.getLogger(InterchangeExtractAndRouteTemplate.class);
 
     private String ingresPoint;
-    private FDNToken associatedWUP;
+    private FDNToken wupTypeID;
+    private RouteElementNames nameSet;
 
-    public InterchangeExtractAndRouteTemplate(CamelContext context, String fromPoint) {
+    public InterchangeExtractAndRouteTemplate(CamelContext context, FDNToken wupTypeID) {
         super(context);
-        LOG.debug(".WUPContainerEgressRouteTemplate(): Entry, context --> ###, fromPoint (WUP Egress Point) --> {}", fromPoint);
-        this.ingresPoint = fromPoint;
+        LOG.debug(".InterchangeExtractAndRouteTemplate(): Entry, context --> ###, wupTypeID", wupTypeID);
+        this.wupTypeID = wupTypeID;
+        nameSet = new RouteElementNames(wupTypeID);
      }
 
-    public String getIngresPoint() {
-        return this.ingresPoint;
-    }
+
 
     @Override
     public void configure(){
-        LOG.debug(".configure(): Entry!");
-        String routeIdentifier = "From-"+ getIngresPoint()+"-To-"; // TODO add number of the Processor instance
-        LOG.debug(".configure(): Creating route --> {}", routeIdentifier);
-        from(getIngresPoint())
-                .routeId(routeIdentifier)
+        LOG.debug(".configure(): Entry!, wupTypeID --> {} ", this.wupTypeID);
+
+        from(nameSet.getEndPointWUPContainerEgressProcessorEgress())
+                .routeId(nameSet.getRouteWUPEgressProcessorEgress2InterchangePayloadTransformerIngres())
+                .to(nameSet.getEndPointInterchangePayloadTransformerIngres());
+
+        from(nameSet.getEndPointInterchangePayloadTransformerIngres())
+                .routeId(nameSet.getRouteInterchangePayloadTransformer())
                 .split().method(InterchangeUoWPayload2NewUoWProcessor.class, "extractUoWPayloadAndCreateNewUoWSet")
+                .to(nameSet.getEndPointInterchangePayloadTransformerEgress());
+
+        from(nameSet.getEndPointInterchangePayloadTransformerEgress())
+                .routeId(nameSet.getRouteInterchangePayloadTransformerEgress2InterchangePayloadRouterIngres())
+                .to(nameSet.getEndPointInterchangeRouterIngres());
+
+        from(nameSet.getEndPointInterchangeRouterIngres())
+                .routeId(nameSet.getRouteInterchangeRouter())
                 .dynamicRouter(method(InterchangeTargetWUPTypeRouter.class,"forwardUoW2WUPs"));
     }
 }

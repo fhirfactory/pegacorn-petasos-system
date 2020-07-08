@@ -52,7 +52,7 @@ public class ResilienceServicesArbitrator {
         this.updateFinalisedParcelStatus();
         this.updateFinishedParcelStatus();
         LOG.trace(".synchroniseJobCard(): First, let's see what is in the Matrix for the ParcelEpisodeID");
-        FDNToken parcelEpisodeID = submittedJobCard.getCardID().getPresentResilienceParcelOccurrenceKey();
+        FDNToken parcelEpisodeID = submittedJobCard.getCardID().getPresentParcelEpisodeID();
         ParcelStatusElementSet parcelSet = activityMatrixDM.getElementStatusSet(parcelEpisodeID);
         if(LOG.isTraceEnabled()) {
             LOG.trace(".synchroniseJobCard(): The ParcelSet associated with the ParcelEpisodeID --> {} contains {} elements", parcelEpisodeID, parcelSet.getParcelInstanceSet().getElements().size());
@@ -65,16 +65,16 @@ public class ResilienceServicesArbitrator {
             throw (new IllegalArgumentException(".synchroniseJobCard(): There are no ResilienceParcels for the given ParcelEpisodeID --> something is very wrong!"));
         }
         LOG.trace(".synchroniseJobCard(): Now, again, for this release - there should only be a single thread per ParcelEpisodeID, so set it to have FOCUS"); // TODO this should be asynchronous
-        parcelSet.setClusteredFocusElement(submittedJobCard.getCardID().getPresentResilienceParcelInstanceID()); // TODO This should not be here!
-        parcelSet.setSystemWideElement(submittedJobCard.getCardID().getPresentResilienceParcelInstanceID()); // TODO This should not be here!
+        parcelSet.setClusteredFocusElement(submittedJobCard.getCardID().getPresentParcelInstanceID()); // TODO This should not be here!
+        parcelSet.setSystemWideElement(submittedJobCard.getCardID().getPresentParcelInstanceID()); // TODO This should not be here!
         LOG.trace(".synchroniseJobCard(): Now, lets update the JobCard based on the ActivityMatrix");
-        if(clusterFocusedParcelInstanceID.equals(submittedJobCard.getCardID().getPresentResilienceParcelInstanceID())){
+        if(clusterFocusedParcelInstanceID.equals(submittedJobCard.getCardID().getPresentParcelInstanceID())){
             ParcelStatusElement clusterFocusElement = parcelSet.getElement(clusterFocusedParcelInstanceID);
             LOG.trace(".synchroniseJobCard(): The WUP has Focus, so letting it do what ever it wants!");
             LOG.debug(".synchroniseJobCard(): Exit, associated ParcelStatusElement --> {}", clusterFocusElement);
             return(clusterFocusElement);
         } else {
-            ParcelStatusElement parcelStatus = parcelSet.getElement(submittedJobCard.getCardID().getPresentResilienceParcelInstanceID());
+            ParcelStatusElement parcelStatus = parcelSet.getElement(submittedJobCard.getCardID().getPresentParcelInstanceID());
             submittedJobCard.setSuggestedStatus(WUPActivityStatusEnum.WUP_ACTIVITY_STATUS_WAITING);
             submittedJobCard.setUpdateDate(Date.from(Instant.now()));
             LOG.debug(".synchroniseJobCard(): Exit, associated ParcelStatusElement --> {}", parcelStatus);
@@ -84,8 +84,8 @@ public class ResilienceServicesArbitrator {
 
     public ParcelStatusElement registerWorkUnitActivity(WUPJobCard submittedJobCard){
         LOG.trace(".registerParcel(): Now register the parcel with the ActivityMatrix");
-        FDNToken parcelInstanceID = submittedJobCard.getCardID().getPresentResilienceParcelInstanceID();
-        FDNToken parcelEpisodeID = submittedJobCard.getCardID().getPresentResilienceParcelOccurrenceKey();
+        FDNToken parcelInstanceID = submittedJobCard.getCardID().getPresentParcelInstanceID();
+        FDNToken parcelEpisodeID = submittedJobCard.getCardID().getPresentParcelEpisodeID();
         FDNToken wupInstanceID = submittedJobCard.getCardID().getPresentWUPInstanceID();
         FDNToken wupTypeID = submittedJobCard.getCardID().getPresentWUPTypeID();
         ParcelStatusElement statusElement = activityMatrixDM.registerWorkUnitActivity(parcelInstanceID,parcelEpisodeID,wupInstanceID,wupTypeID);

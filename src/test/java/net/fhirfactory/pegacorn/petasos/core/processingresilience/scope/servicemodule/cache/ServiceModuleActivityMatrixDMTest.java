@@ -20,20 +20,56 @@
  * SOFTWARE.
  */
 
-package net.fhirfactory.pegacorn.petasos.model.resilience.parcel;
+package net.fhirfactory.pegacorn.petasos.core.processingresilience.scope.servicemodule.cache;
 
-public enum ResilienceParcelFinalisationStatusEnum {
-    PARCEL_FINALISATION_STATUS_NOT_FINALISED("pegacorn.petasos.parcel.finalisation.status.not_finalised"),
-    PARCEL_FINALISATION_STATUS_PARTIALLY_FINALISED("pegacorn.petasos.parcel.finalisation.status.partially_finalised"),
-    PARCEL_FINALISATION_STATUS_FINALISED("pegacorn.petasos.parcel.finalisation.status.finalised");
+import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-    private String petasosParcelFinalisationStatus;
+import static org.junit.jupiter.api.Assertions.*;
 
-    private ResilienceParcelFinalisationStatusEnum(String petasosParcelFinalisationStatus){
-        this.petasosParcelFinalisationStatus = petasosParcelFinalisationStatus;
+class ServiceModuleActivityMatrixDMTest extends TestCase {
+
+    @Test
+    void registerWorkUnitActivity() {
     }
 
-    public String getPetasosParcelFinalisationStatus(){
-        return(this.petasosParcelFinalisationStatus);
+    @Test
+    void updateWorkUnitActivity() {
+    }
+
+    @Test
+    void clearAgedContentFromUpActivityMatrix() {
+    }
+
+    @Test
+    void checkForExistingSystemWideFocusedElement() {
+    }
+
+    @Test
+    void checkForExistingClusterFocusedElement() {
+    }
+
+    @Test
+    void registerDownstreamWUPInterest() {
+    }
+
+    @Test
+    void registerDownstreamParcel() {
+    }
+
+    @Test
+    void checkForFinishedParcelForParcelEpisode() {
+    }
+
+    @Test
+    void checkForFinalisedParcelForParcelEpisode() {
+    }
+
+    @Test
+    void checkForFailedParcelForParcelEpisode() {
+    }
+
+    @Test
+    void checkForTimeoutsForParcelType() {
     }
 }

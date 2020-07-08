@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 MAHun
+ * Copyright (c) 2020 mhunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,34 @@
  * SOFTWARE.
  */
 
-package net.fhirfactory.pegacorn.petasos.model.resilience.parcel;
+package net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix;
 
-public enum ResilienceParcelFinalisationStatusEnum {
-    PARCEL_FINALISATION_STATUS_NOT_FINALISED("pegacorn.petasos.parcel.finalisation.status.not_finalised"),
-    PARCEL_FINALISATION_STATUS_PARTIALLY_FINALISED("pegacorn.petasos.parcel.finalisation.status.partially_finalised"),
-    PARCEL_FINALISATION_STATUS_FINALISED("pegacorn.petasos.parcel.finalisation.status.finalised");
+import net.fhirfactory.pegacorn.common.model.FDNToken;
 
-    private String petasosParcelFinalisationStatus;
+/**
+ * 
+ * @author Mark A. Hunter
+ *
+ */
+public class ParcelFinalisationRegistrationStatus {
+    private FDNToken downstreamParcel;
+    private ParcelFinalisationRegistrationStatusEnum registrationStatus;
 
-    private ResilienceParcelFinalisationStatusEnum(String petasosParcelFinalisationStatus){
-        this.petasosParcelFinalisationStatus = petasosParcelFinalisationStatus;
+    public ParcelFinalisationRegistrationStatus(){
+        this.downstreamParcel = null;
+        this.registrationStatus = ParcelFinalisationRegistrationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_REGISTERED;
     }
 
-    public String getPetasosParcelFinalisationStatus(){
-        return(this.petasosParcelFinalisationStatus);
+    public void registerSuccessorParcel( FDNToken newParcelInstanceID){
+        this.downstreamParcel = newParcelInstanceID;
+        this.registrationStatus = ParcelFinalisationRegistrationStatusEnum.PARCEL_FINALISATION_STATUS_REGISTERED;
+    }
+
+    public ParcelFinalisationRegistrationStatusEnum getSuccessorStatus(){
+        return(this.registrationStatus);
+    }
+
+    public FDNToken getDownstreamParcel(){
+        return(this.downstreamParcel);
     }
 }

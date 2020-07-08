@@ -22,7 +22,6 @@
 
 package net.fhirfactory.pegacorn.petasos.core;
 
-import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.petasos.core.processingresilience.scope.servicemodule.engine.ResilienceServicesArbitrator;
 import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ParcelStatusElement;
@@ -50,9 +49,9 @@ public class PetasosServicesBroker {
         }
         FDNToken wupTypeID = jobCard.getCardID().getPresentWUPTypeID();
         FDNToken wupInstanceID = jobCard.getCardID().getPresentWUPInstanceID();
-        FDNToken previousParcelInstanceID = jobCard.getCardID().getPreviousResilienceParcelInstanceID();
+        FDNToken previousParcelInstanceID = jobCard.getCardID().getPreviousParcelInstanceID();
         ResilienceParcel newParcel = nodeIM.registerParcel(wupTypeID,wupInstanceID,previousParcelInstanceID, initialUoW, false );
-        jobCard.getCardID().setPresentResilienceParcelInstanceID(newParcel.getParcelInstanceID());
+        jobCard.getCardID().setPresentParcelInstanceID(newParcel.getInstanceID());
         ParcelStatusElement statusElement = resilienceArbitrator.synchroniseJobCard(jobCard);
         return(statusElement);
     }
@@ -63,9 +62,9 @@ public class PetasosServicesBroker {
         }
         FDNToken wupTypeID = jobCard.getCardID().getPresentWUPTypeID();
         FDNToken wupInstanceID = jobCard.getCardID().getPresentWUPInstanceID();
-        FDNToken previousParcelInstanceID = jobCard.getCardID().getPreviousResilienceParcelInstanceID();
+        FDNToken previousParcelInstanceID = jobCard.getCardID().getPreviousParcelInstanceID();
         ResilienceParcel newParcel = nodeIM.registerParcel(wupTypeID,wupInstanceID,previousParcelInstanceID, initialUoW, true );
-        jobCard.getCardID().setPresentResilienceParcelInstanceID(newParcel.getParcelInstanceID());
+        jobCard.getCardID().setPresentParcelInstanceID(newParcel.getInstanceID());
         ParcelStatusElement statusElement = resilienceArbitrator.synchroniseJobCard(jobCard);
         return(statusElement);
     }
@@ -74,7 +73,7 @@ public class PetasosServicesBroker {
         if((jobCard == null) || (startedUoW == null)){
             throw( new IllegalArgumentException(".registerWorkUnitActivity(): jobCard or startedUoW are null"));
         }
-        ResilienceParcel finishedParcel = nodeIM.notifyParcelProcessingStart(jobCard.getCardID().getPresentResilienceParcelInstanceID());
+        ResilienceParcel finishedParcel = nodeIM.notifyParcelProcessingStart(jobCard.getCardID().getPresentParcelInstanceID());
         ParcelStatusElement statusElement = resilienceArbitrator.synchroniseJobCard(jobCard);
         return(statusElement);
     }
@@ -83,7 +82,7 @@ public class PetasosServicesBroker {
         if((jobCard == null) || (finishedUoW == null)){
             throw( new IllegalArgumentException(".registerWorkUnitActivity(): jobCard or finishedUoW are null"));
         }
-        ResilienceParcel finishedParcel = nodeIM.notifyParcelProcessingFinish(jobCard.getCardID().getPresentResilienceParcelInstanceID(), finishedUoW);
+        ResilienceParcel finishedParcel = nodeIM.notifyParcelProcessingFinish(jobCard.getCardID().getPresentParcelInstanceID(), finishedUoW);
         ParcelStatusElement statusElement = resilienceArbitrator.synchroniseJobCard(jobCard);
         return(statusElement);
     }
@@ -92,7 +91,7 @@ public class PetasosServicesBroker {
         if((jobCard == null)){
             throw( new IllegalArgumentException(".registerWorkUnitActivity(): jobCard is null"));
         }
-        ResilienceParcel finishedParcel = nodeIM.notifyParcelProcessingFinalisation(jobCard.getCardID().getPresentResilienceParcelInstanceID());
+        ResilienceParcel finishedParcel = nodeIM.notifyParcelProcessingFinalisation(jobCard.getCardID().getPresentParcelInstanceID());
         ParcelStatusElement statusElement = resilienceArbitrator.synchroniseJobCard(jobCard);
         return(statusElement);
     }
@@ -101,7 +100,7 @@ public class PetasosServicesBroker {
         if((jobCard == null) || (failedUoW == null)){
             throw( new IllegalArgumentException(".notifyFailureOfWorkUnitActivity(): jobCard or finishedUoW are null"));
         }
-        ResilienceParcel failedParcel = nodeIM.notifyParcelProcessingFinish(jobCard.getCardID().getPresentResilienceParcelInstanceID(), failedUoW);
+        ResilienceParcel failedParcel = nodeIM.notifyParcelProcessingFinish(jobCard.getCardID().getPresentParcelInstanceID(), failedUoW);
         ParcelStatusElement statusElement = resilienceArbitrator.synchroniseJobCard(jobCard);
         return(statusElement);
     }
@@ -116,7 +115,7 @@ public class PetasosServicesBroker {
         if(!jobCard.getCardID().hasPresentResilienceParcelInstanceID()){
             return;
         }
-        nodeIM.notifyParcelProcessingPurge(jobCard.getCardID().getPresentResilienceParcelInstanceID());
+        nodeIM.notifyParcelProcessingPurge(jobCard.getCardID().getPresentParcelInstanceID());
     }
 
     public ParcelStatusElement synchroniseJobCard(WUPJobCard existingJobCard){

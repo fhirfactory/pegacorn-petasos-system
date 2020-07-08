@@ -36,10 +36,10 @@ import net.fhirfactory.pegacorn.common.model.FDNToken;
  */
 
 public class ParcelFinalisationStatusSet {
-	ConcurrentHashMap<FDNToken, ParcelFinalisationStatus> parcelStatusSet;
+	ConcurrentHashMap<FDNToken, ParcelFinalisationRegistrationStatus> parcelStatusSet;
 	
 	public ParcelFinalisationStatusSet() {
-		parcelStatusSet = new ConcurrentHashMap<FDNToken, ParcelFinalisationStatus>();
+		parcelStatusSet = new ConcurrentHashMap<FDNToken, ParcelFinalisationRegistrationStatus>();
 	}
 	
 	public void addDownstreamWUPInstanceID(FDNToken downstreamWUPID) {
@@ -49,7 +49,7 @@ public class ParcelFinalisationStatusSet {
 		if(parcelStatusSet.containsKey(downstreamWUPID)) {
 			return;
 		}
-		ParcelFinalisationStatus newStatus = new ParcelFinalisationStatus();
+		ParcelFinalisationRegistrationStatus newStatus = new ParcelFinalisationRegistrationStatus();
 		parcelStatusSet.put(downstreamWUPID, newStatus);
 	}
 	
@@ -58,12 +58,12 @@ public class ParcelFinalisationStatusSet {
 			return;
 		}
 		if(parcelStatusSet.containsKey(downstreamWUPID)) {
-			ParcelFinalisationStatus registrationStatus = parcelStatusSet.get(downstreamWUPID);
+			ParcelFinalisationRegistrationStatus registrationStatus = parcelStatusSet.get(downstreamWUPID);
 			registrationStatus.registerSuccessorParcel(downstreamParcelID);
 			parcelStatusSet.remove(downstreamWUPID);
 			parcelStatusSet.put(downstreamWUPID,registrationStatus );
 		} else {
-			ParcelFinalisationStatus registrationStatus = new ParcelFinalisationStatus();
+			ParcelFinalisationRegistrationStatus registrationStatus = new ParcelFinalisationRegistrationStatus();
 			registrationStatus.registerSuccessorParcel(downstreamParcelID);
 			parcelStatusSet.put(downstreamWUPID,registrationStatus );
 		}
@@ -78,8 +78,8 @@ public class ParcelFinalisationStatusSet {
 		Iterator<FDNToken> fdnSetIterator = fdnSet.iterator();
 		while(fdnSetIterator.hasNext()) {
 			FDNToken currentFDN = fdnSetIterator.next();
-			ParcelFinalisationStatus registrationStatus = parcelStatusSet.get(currentFDN);
-			if(registrationStatus.getSuccessorStatus() == ParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_REGISTERED) {
+			ParcelFinalisationRegistrationStatus registrationStatus = parcelStatusSet.get(currentFDN);
+			if(registrationStatus.getSuccessorStatus() == ParcelFinalisationRegistrationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_REGISTERED) {
 				wupSet.add(currentFDN);
 			}
 		}

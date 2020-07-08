@@ -24,6 +24,7 @@ package net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix;
 
 import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.petasos.model.pathway.ContinuityID;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelProcessingStatusEnum;
 
 import java.time.Instant;
 import java.util.Date;
@@ -48,7 +49,7 @@ public class ParcelStatusElement {
     }
 
     public FDNToken getParcelInstanceID() {
-        return (this.statusElementID.getPresentResilienceParcelInstanceID());
+        return (this.statusElementID.getPresentParcelInstanceID());
     }
 
     public FDNToken getWupInstanceID() {
