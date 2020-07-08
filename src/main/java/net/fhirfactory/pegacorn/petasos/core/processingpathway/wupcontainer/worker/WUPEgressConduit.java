@@ -22,27 +22,27 @@
 
 package net.fhirfactory.pegacorn.petasos.core.processingpathway.wupcontainer.worker;
 
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.petasos.core.PetasosServicesBroker;
+import net.fhirfactory.pegacorn.petasos.core.processingpathway.naming.RouteElementNames;
 import net.fhirfactory.pegacorn.petasos.model.pathway.WorkUnitTransportPacket;
+import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ParcelStatusElement;
 import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
+import net.fhirfactory.pegacorn.petasos.model.wup.WUPJobCard;
 import org.apache.camel.Exchange;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import java.time.Instant;
+import java.util.Date;
 
-public class WUPContainerIngresGatekeeper {
-    private static final Logger LOG = LoggerFactory.getLogger(WUPContainerIngresGatekeeper.class);
-
-    @Inject
-    PetasosServicesBroker petasosServicesBroker;
-
-    public UoW ingresGatekeeper(WorkUnitTransportPacket ingresPacket, Exchange camelExchange, FDNToken wupTypeID, FDNToken wupInstanceID) {
-        LOG.debug(".ingresGatekeeper(): Enter, ingresPacket --> {}, wupTypeID --> {}, wupInstanceID --> {}", ingresPacket, wupTypeID, wupInstanceID);
-
-        UoW currentUoW = ingresPacket.getPayload();
-
-        return(currentUoW);
+public class WUPEgressConduit {
+    public WorkUnitTransportPacket forwardIntoWUP(UoW incomingUoW, Exchange camelExchange, FDNToken wupTypeID, FDNToken wupInstanceID){
+        RouteElementNames elementNames = new RouteElementNames(wupTypeID);
+        WUPJobCard jobCard = camelExchange.getProperty("WUPJobCard", WUPJobCard.class);
+        ParcelStatusElement statusElement = camelExchange.getProperty("ParcelStatusElement", ParcelStatusElement.class);
+        WorkUnitTransportPacket transportPacket = new WorkUnitTransportPacket(elementNames.getEndPointWUPEgressConduitEgress(), Date.from(Instant.now()),incomingUoW);
+        transportPacket.setCurrentJobCard(jobCard);
+        transportPacket.setCurrentParcelStatus(statusElement);
+        transportPacket.setToElement(elementNames.getEndPointWUPContainerEgressProcessorIngres());
+        return(transportPacket);
     }
 }

@@ -22,39 +22,68 @@
 
 package net.fhirfactory.pegacorn.petasos.model.pathway;
 
-import net.fhirfactory.pegacorn.common.model.FDNToken;
+import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ParcelStatusElement;
 import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
 
 import java.util.Date;
+
+import net.fhirfactory.pegacorn.petasos.model.wup.WUPJobCard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WorkUnitTransportPacket {
     private static final Logger LOG = LoggerFactory.getLogger(WorkUnitTransportPacket.class);
 
-    private FDNToken fromElement;
-    private FDNToken toElement;
+    private String fromElement;
+    private String toElement;
     private Date senderSendDate;
     private boolean isARetry;
-    private ContinuityID activityID;
+    private WUPJobCard currentJobCard;
+    private ParcelStatusElement currentParcelStatus;
     private UoW payload;
+    private String generatedString;
     
-    public WorkUnitTransportPacket(FDNToken toElement, Date senderSendDate, UoW payload) {
+    public WorkUnitTransportPacket(String toElement, Date senderSendDate, UoW payload) {
         this.toElement = toElement;
         this.senderSendDate = senderSendDate;
         this.payload = payload;
         this.isARetry = false;
         this.fromElement = null;
-        this.activityID = null;
+        this.currentJobCard = null;
+        this.currentParcelStatus = null;
+        this.generatedString = null;
+        generateString();
     }
 
     public WorkUnitTransportPacket(WorkUnitTransportPacket originalPacket) {
-        this.fromElement = originalPacket.getFromElement();
-        this.toElement = originalPacket.getToElement();
-        this.senderSendDate = originalPacket.getSenderSendDate();
+        this.fromElement = null;
+        this.currentJobCard = null;
+        this.currentParcelStatus = null;
+        this.toElement = null;
+        this.senderSendDate = null;
+        this.payload = null;
+        this.generatedString = null;
+        // Assign values if available
+        if(originalPacket.hasFromElement()) {
+            this.fromElement = originalPacket.getFromElement();
+        }
+        if(originalPacket.hasToElement()) {
+            this.toElement = originalPacket.getToElement();
+        }
+        if(originalPacket.hasSenderSendDate()) {
+            this.senderSendDate = originalPacket.getSenderSendDate();
+        }
         this.isARetry = originalPacket.getIsARetry();
-        this.activityID = originalPacket.getActivityID();
-        this.payload = originalPacket.getPayload();
+        if(originalPacket.hasCurrentJobCard()) {
+            this.currentJobCard = originalPacket.getCurrentJobCard();
+        }
+        if(originalPacket.hasCurrentParcelStatus()) {
+            this.currentParcelStatus = originalPacket.getCurrentParcelStatus();
+        }
+        if(originalPacket.hasPayload()) {
+            this.payload = originalPacket.getPayload();
+        }
+        generateString();
     }
 
     public boolean hasIsARetry(){
@@ -67,8 +96,49 @@ public class WorkUnitTransportPacket {
 
     public void setRetryCount(boolean retry) {
         this.isARetry = retry;
+        generateString();
     }
     
+    // CurrentJobCard helper/bean methods
+
+    public boolean hasCurrentJobCard(){
+        if(this.currentJobCard==null){
+            return(false);
+        } else {
+            return(true);
+        }
+    }
+
+    public WUPJobCard getCurrentJobCard() {
+        return currentJobCard;
+    }
+
+    public void setCurrentJobCard(WUPJobCard currentJobCard) {
+        this.currentJobCard = currentJobCard;
+        generateString();
+    }
+
+    // CurrentParcelStatus helper/bean methods
+
+    public boolean hasCurrentParcelStatus(){
+        if(this.currentParcelStatus==null){
+            return(false);
+        } else {
+            return(true);
+        }
+    }
+
+    public ParcelStatusElement getCurrentParcelStatus() {
+        return currentParcelStatus;
+    }
+
+    public void setCurrentParcelStatus(ParcelStatusElement currentParcelStatus) {
+        this.currentParcelStatus = currentParcelStatus;
+        generateString();
+    }
+
+    // FromElement helper/bean methods
+
     public boolean hasFromElement(){
         if(this.fromElement==null){
             return(false);
@@ -77,13 +147,16 @@ public class WorkUnitTransportPacket {
         }
     }
 
-    public FDNToken getFromElement() {
+    public String getFromElement() {
         return fromElement;
     }
 
-    public void setFromElement(FDNToken fromElement) {
+    public void setFromElement(String fromElement) {
         this.fromElement = fromElement;
+        generateString();
     }
+
+    // ToElement helper/bean methods
 
     public boolean hasToElement(){
         if(this.toElement==null){
@@ -92,13 +165,16 @@ public class WorkUnitTransportPacket {
             return(true);
         }
     }
-    public FDNToken getToElement() {
+    public String getToElement() {
         return toElement;
     }
 
-    public void setToElement(FDNToken toElement) {
+    public void setToElement(String toElement) {
         this.toElement = toElement;
+        generateString();
     }
+
+    // SenderSendDate helper/bean methods
 
     public boolean hasSenderSendDate(){
         if(this.senderSendDate==null){
@@ -113,7 +189,10 @@ public class WorkUnitTransportPacket {
 
     public void setSenderSendDate(Date senderSendDate) {
         this.senderSendDate = senderSendDate;
+        generateString();
     }
+
+    // Payload helper/bean methods
 
     public boolean hasPayload(){
         if(this.payload==null){
@@ -129,24 +208,63 @@ public class WorkUnitTransportPacket {
 
     public void setPayload(UoW payload) {
         this.payload = payload;
+        generateString();
     }
 
-    public boolean hasActivityID(){
-        if(this.activityID ==null){
-            return(false);
+    // toString method(s)
+
+    private void generateString(){
+        String fromElementString;
+        String currentJobCardString;
+        String currentParcelStatusString;
+        String toElementString;
+        String senderSendDateString;
+        String payloadString;
+        String isARetryString;
+        if(hasPayload()){
+            payloadString = "(payload:" + this.payload.toString() + ")";
         } else {
-            return(true);
+            payloadString = "(payload:null)";
         }
-    }
-    
-    public ContinuityID getActivityID() {
-        return activityID;
+        if(hasFromElement()){
+            fromElementString = "(fromElement:" + this.fromElement.toString() + ")";
+        } else {
+            fromElementString = "(fromElement:null)";
+        }
+        if(hasCurrentParcelStatus()){
+            currentParcelStatusString = "(currentParcelStatus:" + this.currentParcelStatus.toString() + ")";
+        } else {
+            currentParcelStatusString = "(currentParcelStatus:null)";
+        }
+        if(hasToElement()){
+            toElementString = "(toElement:" + this.toElement.toString() + ")";
+        } else {
+            toElementString = "(toElement:null)";
+        }
+        if(hasSenderSendDate()){
+            senderSendDateString = "(senderSendDate:" + this.senderSendDate.toString() + ")";
+        } else {
+            senderSendDateString = "(senderSendDate:null)";
+        }
+        if(hasCurrentParcelStatus()){
+            currentJobCardString = "(currentJobCard:" + this.currentJobCard.toString() + ")";
+        } else {
+            currentJobCardString = "(currentJobCard:null)";
+        }
+        isARetryString = "(isARetry:" + this.isARetry + ")";
+        this.generatedString = "WorkUnitTransportPacket={"
+                + fromElementString + ","
+                + toElementString + ","
+                + senderSendDateString + ","
+                + currentJobCardString + ","
+                + currentParcelStatusString + ","
+                + payloadString + ","
+                + isARetryString + "}";
     }
 
-    public void setActivityID(ContinuityID activityID) {
-        this.activityID = activityID;
+    @Override
+    public String toString(){
+        return(this.generatedString);
     }
-    
-    
 
 }

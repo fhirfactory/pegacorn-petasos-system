@@ -57,28 +57,28 @@ public class RouteElementNames {
         return(endpointName);
     }
 
-    public String getEndPointWUPContainerIngresGatekeeperEgress() {
-        String endpointName = DIRECT_TYPE + wupTypeName + ".WUPContainer.IngresGatekeeper.Egress";
+    public String getEndPointWUPIngresConduitIngres() {
+        String endpointName = DIRECT_TYPE + wupTypeName + ".WUP.IngresConduit.Ingres";
         return(endpointName);
     }
 
     public String getEndPointWUPIngres() {
-        String endpointName = DIRECT_TYPE + wupTypeName + ".Ingres";
+        String endpointName = DIRECT_TYPE + wupTypeName + ".WUP.Ingres";
         return(endpointName);
     }
 
     public String getEndPointWUPEgress() {
-        String endpointName = DIRECT_TYPE + wupTypeName + ".Egress";
+        String endpointName = DIRECT_TYPE + wupTypeName + "WUP.Egress";
+        return(endpointName);
+    }
+
+    public String getEndPointWUPEgressConduitEgress() {
+        String endpointName = DIRECT_TYPE + wupTypeName + ".WUP.EgressConduit.Egress";
         return(endpointName);
     }
 
     public String getEndPointWUPContainerEgressGatekeeperIngres() {
         String endpointName = DIRECT_TYPE + wupTypeName + ".WUPContainer.EgressGatekeeper.Ingres";
-        return(endpointName);
-    }
-
-    public String getEndPointWUPContainerEgressGatekeeperEgress() {
-        String endpointName = DIRECT_TYPE + wupTypeName + ".WUPContainer.EgressGatekeeper.Egress";
         return(endpointName);
     }
 
@@ -117,18 +117,18 @@ public class RouteElementNames {
         return(endpointName);
     }
 
-    public String getRouteIngresGatekeeperEgress2WUPIngres() {
-        String endpointName = "FROM-" + wupTypeName + ".WUPC.IG.E-To-" + wupTypeName +".WUP.I" ;
+    public String getRouteIngresConduitIngres2WUPIngres() {
+        String endpointName = "FROM-" + wupTypeName + ".WUP.IC.I-To-" + wupTypeName +".WUP.I" ;
         return(endpointName);
     }
 
-    public String getRouteWUPEgress2WUPEgressGatekeeperIngres() {
-        String endpointName = "FROM-" + wupTypeName + ".WUP.E-To-" + wupTypeName +".WUPC.EG.I" ;
+    public String getRouteWUPEgress2WUPEgressConduitEgress() {
+        String endpointName = "FROM-" + wupTypeName + ".WUP.E-To-" + wupTypeName +".WUP.EC.E" ;
         return(endpointName);
     }
 
-    public String getRouteWUPEgressGatekeeperEgress2WUPEgressProcessorIngres() {
-        String endpointName = "FROM-" + wupTypeName + ".WUPC.EG.E-To-" + wupTypeName +".WUPC.EP.I" ;
+    public String getRouteWUPEgressConduitEgress2WUPEgressGatekeeperIngres() {
+        String endpointName = "FROM-" + wupTypeName + ".WUP.EC.E-To-" + wupTypeName +".WUPC.EG.I" ;
         return(endpointName);
     }
 

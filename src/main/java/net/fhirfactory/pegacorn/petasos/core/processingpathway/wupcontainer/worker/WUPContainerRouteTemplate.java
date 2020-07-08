@@ -38,12 +38,6 @@ public class WUPContainerRouteTemplate extends RouteBuilder {
     private FDNToken wupInstanceID;
     private RouteElementNames nameSet;
 
-    @Inject
-    WUPContainerEgressGatekeeper egressGatekeeper;
-
-    @Inject
-    WUPContainerEgressProcessor egressProcessor;
-
     public WUPContainerRouteTemplate(CamelContext context, FDNToken wupTypeID, FDNToken wupInstanceID) {
         super(context);
         LOG.debug(".WUPContainerRouteTemplate(): Entry, context --> ###, wupTypeID", wupTypeID);
@@ -67,25 +61,20 @@ public class WUPContainerRouteTemplate extends RouteBuilder {
 
         from(nameSet.getEndPointWUPContainerIngresGatekeeperIngres())
                 .routeId(nameSet.getRouteWUPContainerIngresGateway())
-                .bean(WUPContainerIngresGatekeeper.class, "ingresGatekeeper(*, Exchange,"+this.wupTypeID+","+this.wupInstanceID+")")
-                .to(nameSet.getEndPointWUPContainerIngresGatekeeperEgress());
+                .dynamicRouter(method(WUPContainerIngresGatekeeper.class, "ingresGatekeeper(*, Exchange,"+this.wupTypeID+","+this.wupInstanceID+")"));
 
-        from(nameSet.getEndPointWUPContainerIngresGatekeeperEgress())
-                .routeId(nameSet.getRouteIngresGatekeeperEgress2WUPIngres())
+        from(nameSet.getEndPointWUPIngresConduitIngres())
+                .routeId(nameSet.getRouteIngresConduitIngres2WUPIngres())
+                .bean(WUPIngresConduit.class, "forwardIntoWUP(*, Exchange,"+this.wupTypeID+","+this.wupInstanceID+")")
                 .to(nameSet.getEndPointWUPIngres());
 
         from(nameSet.getEndPointWUPEgress())
-                .routeId(nameSet.getRouteWUPEgress2WUPEgressGatekeeperIngres())
+                .routeId(nameSet.getRouteWUPEgress2WUPEgressConduitEgress())
                 .to(nameSet.getEndPointWUPContainerEgressGatekeeperIngres());
 
-        from(nameSet.getEndPointWUPContainerEgressGatekeeperIngres())
+        from(nameSet.getEndPointWUPContainerEgressProcessorIngres())
                 .routeId(nameSet.getRouteWUPContainerEgressGateway())
-                .bean(WUPContainerEgressGatekeeper.class,"egressGatekeeper(*, Exchange,"+this.wupTypeID+","+this.wupInstanceID+")")
-                .to(nameSet.getEndPointWUPContainerIngresGatekeeperEgress());
-
-        from(nameSet.getEndPointWUPContainerEgressGatekeeperEgress())
-                .routeId(nameSet.getRouteWUPEgressGatekeeperEgress2WUPEgressProcessorIngres())
-                .to(nameSet.getEndPointWUPContainerEgressProcessorIngres());
+                .dynamicRouter(method(WUPContainerEgressGatekeeper.class,"egressGatekeeper(*, Exchange,"+this.wupTypeID+","+this.wupInstanceID+")"));
 
         from(nameSet.getEndPointWUPContainerEgressProcessorIngres())
                 .routeId(nameSet.getRouteWUPContainerEgressProcessor())

@@ -21,9 +21,7 @@
  */
 package net.fhirfactory.pegacorn.petasos.model.wup;
 
-import net.fhirfactory.pegacorn.common.model.FDNToken;
 import net.fhirfactory.pegacorn.petasos.model.pathway.ContinuityID;
-import net.fhirfactory.pegacorn.petasos.model.resilience.activitymatrix.ParcelStatusElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,21 +34,24 @@ public class WUPJobCard {
     private ContinuityID cardID;
     private Date updateDate;
     private WUPActivityStatusEnum currentStatus;
-    private WUPActivityStatusEnum suggestedStatus;
+    private WUPActivityStatusEnum requestedStatus;
+    private WUPActivityStatusEnum grantedStatus;
     private WUPClusterModeEnum clusterMode;
     private WUPSystemModeEnum systemMode;
-    private boolean toBeDiscarded;
+    private boolean isToBeDiscarded;
+
 
     private String toStringValue;
 
-    public WUPJobCard(ContinuityID activityID, WUPActivityStatusEnum currentStatus, WUPActivityStatusEnum suggestedStatus, WUPClusterModeEnum clusterMode, WUPSystemModeEnum systemMode, Date updateDate) {
+    public WUPJobCard(ContinuityID activityID, WUPActivityStatusEnum currentStatus, WUPActivityStatusEnum requestedStatus, WUPClusterModeEnum clusterMode, WUPSystemModeEnum systemMode, Date updateDate) {
         this.cardID = null;
         this.updateDate = null;
         this.currentStatus = null;
-        this.suggestedStatus = null;
+        this.requestedStatus = null;
         this.clusterMode = null;
         this.systemMode = null;
         this.toStringValue = null;
+        this.grantedStatus = null;
 
         if ((activityID == null)) {
             throw (new IllegalArgumentException("WUP Continuity Record is null in Constructor"));
@@ -59,9 +60,9 @@ public class WUPJobCard {
         this.currentStatus = currentStatus;
         this.clusterMode = clusterMode;
         this.cardID = new ContinuityID(activityID);
-        this.suggestedStatus = suggestedStatus;
+        this.requestedStatus = requestedStatus;
         this.systemMode = systemMode;
-        this.toBeDiscarded = false;
+        this.isToBeDiscarded = false;
         generateToString();
     }
 
@@ -73,13 +74,34 @@ public class WUPJobCard {
         this.updateDate = originalCard.getUpdateDate();
         this.currentStatus = originalCard.getCurrentStatus();
         this.clusterMode = originalCard.getClusterMode();
-        this.suggestedStatus = originalCard.getSuggestedStatus();
+        this.requestedStatus = originalCard.getRequestedStatus();
         this.systemMode = originalCard.getSystemMode();
+        this.grantedStatus = originalCard.getGrantedStatus();
         generateToString();
     }
 
-    public boolean isToBeDiscarded() {
-        return (this.toBeDiscarded);
+    public boolean hasGrantedStatus(){
+        if(this.requestedStatus==null){
+            return(false);
+        } else {
+            return(true);
+        }
+    }
+
+    public WUPActivityStatusEnum getGrantedStatus() {
+        return grantedStatus;
+    }
+
+    public void setGrantedStatus(WUPActivityStatusEnum grantedStatus) {
+        this.grantedStatus = grantedStatus;
+    }
+
+    public boolean getIsToBeDiscarded() {
+        return (this.isToBeDiscarded);
+    }
+
+    public void setIsToBeDiscarded(boolean beDiscarded){
+        this.isToBeDiscarded = beDiscarded;
     }
 
     // Helper/accessor methods for the cardID attribute
@@ -175,11 +197,11 @@ public class WUPJobCard {
         } else {
             currentStatusString = "(currentStatus:null)";
         }
-        String suggestedStatusString;
-        if (hasSuggestedStatus()) {
-            suggestedStatusString = "(suggestedStatus:" + this.getSuggestedStatus().toString() + ")";
+        String requestedStatusString;
+        if (hasRequestedStatus()) {
+            requestedStatusString = "(suggestedStatus:" + this.getRequestedStatus().toString() + ")";
         } else {
-            suggestedStatusString = "(suggestedStatus:null)";
+            requestedStatusString = "(suggestedStatus:null)";
         }
         String clusterModeString;
         if (hasClusterMode()) {
@@ -193,30 +215,37 @@ public class WUPJobCard {
         } else {
             systemModeString = "(systemMode:null)";
         }
+        String grantedStatusString;
+        if(hasGrantedStatus()){
+            grantedStatusString = "(grantedStatus:" + this.getGrantedStatus().toString() + ")";
+        } else {
+            grantedStatusString = "(grantedStatus:null)";
+        }
         this.toStringValue = "WUPJobCard={"
                 + cardIDString + ","
                 + updateDateString + ","
                 + currentStatusString + ","
-                + suggestedStatusString + ","
+                + requestedStatusString + ","
+                + grantedStatusString + ","
                 + systemModeString + ","
                 + clusterModeString + ","
-                + "(toBeDiscarded=" + this.toBeDiscarded + ")}";
+                + "(isToBeDiscarded=" + this.isToBeDiscarded + ")}";
     }
 
-    boolean hasSuggestedStatus() {
-        if (this.suggestedStatus == null) {
+    boolean hasRequestedStatus() {
+        if (this.requestedStatus == null) {
             return (false);
         } else {
             return (true);
         }
     }
 
-    public WUPActivityStatusEnum getSuggestedStatus() {
-        return suggestedStatus;
+    public WUPActivityStatusEnum getRequestedStatus() {
+        return requestedStatus;
     }
 
-    public void setSuggestedStatus(WUPActivityStatusEnum suggestedStatus) {
-        this.suggestedStatus = suggestedStatus;
+    public void setRequestedStatus(WUPActivityStatusEnum requestedStatus) {
+        this.requestedStatus = requestedStatus;
         generateToString();
     }
 

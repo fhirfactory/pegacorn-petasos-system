@@ -23,26 +23,17 @@
 package net.fhirfactory.pegacorn.petasos.core.processingpathway.wupcontainer.worker;
 
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.petasos.core.PetasosServicesBroker;
 import net.fhirfactory.pegacorn.petasos.model.pathway.WorkUnitTransportPacket;
 import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
 import org.apache.camel.Exchange;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+public class WUPIngresConduit {
 
-public class WUPContainerIngresGatekeeper {
-    private static final Logger LOG = LoggerFactory.getLogger(WUPContainerIngresGatekeeper.class);
 
-    @Inject
-    PetasosServicesBroker petasosServicesBroker;
-
-    public UoW ingresGatekeeper(WorkUnitTransportPacket ingresPacket, Exchange camelExchange, FDNToken wupTypeID, FDNToken wupInstanceID) {
-        LOG.debug(".ingresGatekeeper(): Enter, ingresPacket --> {}, wupTypeID --> {}, wupInstanceID --> {}", ingresPacket, wupTypeID, wupInstanceID);
-
-        UoW currentUoW = ingresPacket.getPayload();
-
-        return(currentUoW);
+    public UoW forwardIntoWUP(WorkUnitTransportPacket incomingPacket, Exchange camelExchange, FDNToken wupTypeID, FDNToken wupInstanceID){
+        UoW theUoW = incomingPacket.getPayload();
+        camelExchange.setProperty("WUPJobCard", incomingPacket.getCurrentJobCard());
+        camelExchange.setProperty("ParcelStatusElement", incomingPacket.getCurrentParcelStatus());
+        return(theUoW);
     }
 }

@@ -75,7 +75,7 @@ public class ResilienceServicesArbitrator {
             return(clusterFocusElement);
         } else {
             ParcelStatusElement parcelStatus = parcelSet.getElement(submittedJobCard.getCardID().getPresentParcelInstanceID());
-            submittedJobCard.setSuggestedStatus(WUPActivityStatusEnum.WUP_ACTIVITY_STATUS_WAITING);
+            submittedJobCard.setRequestedStatus(WUPActivityStatusEnum.WUP_ACTIVITY_STATUS_WAITING);
             submittedJobCard.setUpdateDate(Date.from(Instant.now()));
             LOG.debug(".synchroniseJobCard(): Exit, associated ParcelStatusElement --> {}", parcelStatus);
             return(parcelStatus);
