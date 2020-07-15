@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2020 MAHun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,36 +20,20 @@
  * SOFTWARE.
  */
 
-package net.fhirfactory.pegacorn.petasos.wup;
+package net.fhirfactory.pegacorn.petasos.wup.archetypes;
 
-import net.fhirfactory.pegacorn.petasos.model.pathway.ContinuityID;
-import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
 import net.fhirfactory.pegacorn.petasos.model.wup.*;
-import net.fhirfactory.pegacorn.petasos.wup.common.GenericWUPTemplate;
+import net.fhirfactory.pegacorn.petasos.wup.archetypes.common.GenericWUPTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class APIAnswerOnlyGatewayWUP extends GenericWUPTemplate {
-    private static final Logger LOG = LoggerFactory.getLogger(APIAnswerOnlyGatewayWUP.class);
+public abstract class MessagingIngresGatewayWUP extends GenericWUPTemplate {
+    private static final Logger LOG = LoggerFactory.getLogger(MessagingIngresGatewayWUP.class);
 
-    public APIAnswerOnlyGatewayWUP(){
-        super();
-    }
-
-    @Override
     public WUPArchetypeEnum getWUPArchetype(){
-        return(WUPArchetypeEnum.WUP_NATURE_API_ANSWER);
+        return(WUPArchetypeEnum.WUP_NATURE_MESSAGE_EXTERNAL_INGRES_POINT);
     }
 
-     public void registerActivityStart(UoW unitOfWork, WUPClusterModeEnum clusterMode, WUPSystemModeEnum systemMode){
-        LOG.debug(".registerActivityStart(): Entry, unitOfWork --> {}", unitOfWork);
-        ContinuityID newContinuityID = new ContinuityID();
-        newContinuityID.setPresentWUPTypeID(this.getWupTypeID());
-        newContinuityID.setPresentWUPInstanceID(this.getWupInstanceID());
-     }
 
-    public void registerActivityFinish(UoW unitOfWork){
-        LOG.debug(".registerActivityFinish(): Entry, unitOfWork --> {}", unitOfWork);
 
-    }
 }

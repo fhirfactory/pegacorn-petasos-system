@@ -24,7 +24,6 @@ package net.fhirfactory.pegacorn.petasos.resilience.servicemodule.manager;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.deploymentproperties.PetasosProperties;
 import net.fhirfactory.pegacorn.petasos.audit.api.PetasosAuditWriter;
 import net.fhirfactory.pegacorn.petasos.resilience.servicemodule.cache.ServiceModuleParcelCacheDM;
 import net.fhirfactory.pegacorn.petasos.model.pathway.ContinuityID;
@@ -53,9 +52,6 @@ public class ResilienceParcelServicesIM {
 
 //    @Inject
 //    ServiceModuleActivityMatrixDM resilienceMatrixDM;
-
-    @Inject
-    PetasosProperties systemProperties;
 
     @Inject
     PetasosAuditWriter auditWriter;

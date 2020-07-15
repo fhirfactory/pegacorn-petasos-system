@@ -20,23 +20,7 @@
  * SOFTWARE.
  */
 
-package net.fhirfactory.pegacorn.petasos.wup;
+package net.fhirfactory.pegacorn.petasos.wup.archetypes;
 
-import net.fhirfactory.pegacorn.petasos.PetasosServicesBroker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-
-import net.fhirfactory.pegacorn.petasos.wup.common.GenericWUPTemplate;
-
-public abstract class StandardWUP extends GenericWUPTemplate {
-    private static final Logger LOG = LoggerFactory.getLogger(StandardWUP.class);
-
-
-    @Inject
-    PetasosServicesBroker moduleIM;
-
-
-
+public class ConcurrentMessagingGatewayWUP {
 }

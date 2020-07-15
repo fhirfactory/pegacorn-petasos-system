@@ -24,7 +24,6 @@ package net.fhirfactory.pegacorn.petasos.topology.manager;
 import java.util.Map;
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.deploymentproperties.PetasosProperties;
 import net.fhirfactory.pegacorn.petasos.model.resilience.mode.ConcurrencyMode;
 import net.fhirfactory.pegacorn.petasos.model.resilience.mode.DeploymentResilienceMode;
 import net.fhirfactory.pegacorn.petasos.model.topology.*;
@@ -44,9 +43,6 @@ import java.util.Set;
 public class TopologyIM {
 
     private static final Logger LOG = LoggerFactory.getLogger(TopologyIM.class);
-
-    @Inject
-    PetasosProperties platformProperties;
 
     @Inject
     TopologyDM topologyDataManager;
@@ -226,4 +222,5 @@ public class TopologyIM {
         LOG.debug(".getConcurrencyMode(): Exit, couldn't find anything - so returning default");
         return(DeploymentResilienceMode.PETASOS_MODE_STANDALONE);
     }
+
 }

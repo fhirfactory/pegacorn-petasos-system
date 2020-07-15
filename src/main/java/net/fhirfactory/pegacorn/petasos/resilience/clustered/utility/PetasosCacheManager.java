@@ -36,8 +36,6 @@ import javax.inject.Inject;
 import javax.enterprise.context.ApplicationScoped;
 import org.infinispan.manager.DefaultCacheManager;
 
-import net.fhirfactory.pegacorn.deploymentproperties.PetasosProperties;
-
 import org.infinispan.configuration.global.GlobalConfiguration;
 import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.eviction.EvictionType;
@@ -47,9 +45,6 @@ import org.infinispan.configuration.cache.CacheMode;
 
 @ApplicationScoped
 public class PetasosCacheManager {
-
-	@Inject
-	PetasosProperties petasosProperties;
 
 	private DefaultCacheManager petasosCacheManager;
 
@@ -77,7 +72,7 @@ public class PetasosCacheManager {
 			// not sure about preload effect when starting a new pod - could out of date
 			// info clobber newer info, see
 			// https://docs.jboss.org/infinispan/10.1/apidocs/org/infinispan/configuration/cache/AbstractStoreConfigurationBuilder.html#preload(boolean)
-			Configuration local = new ConfigurationBuilder().statistics().enable().clustering()
+			/* Configuration local = new ConfigurationBuilder().statistics().enable().clustering()
 					.cacheMode(CacheMode.DIST_SYNC).persistence().passivation(true) // only write the cache overflow to
 																					// disk
 					.addSingleFileStore() // the disk cache
@@ -89,15 +84,15 @@ public class PetasosCacheManager {
 																										// bytes, need
 																										// to make
 																										// configurable
-					.build();
+					.build(); */
 
 			// create a cache manager based on the gloabl configuration
-			petasosCacheManager = new DefaultCacheManager(global);
+			/* petasosCacheManager = new DefaultCacheManager(global);
 			// define a set of caches based on the local configuration
 			petasosCacheManager.defineConfiguration("petasos-parcel-cache", local);
 			petasosCacheManager.defineConfiguration("petasos-watchdog-cache", "petasos-parcel-cache", local);
 			petasosCacheManager.defineConfiguration("petasos-uow-to-wup-map", "petasos-parcel-cache", local);
-			petasosCacheManager.defineConfiguration("capability-map", "petasos-parcel-cache", local);
+			petasosCacheManager.defineConfiguration("capability-map", "petasos-parcel-cache", local); */
 		}
 		return petasosCacheManager;
 	}

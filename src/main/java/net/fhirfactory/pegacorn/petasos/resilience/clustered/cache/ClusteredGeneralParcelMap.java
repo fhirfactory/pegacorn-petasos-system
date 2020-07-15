@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNToken;
-import net.fhirfactory.pegacorn.deploymentproperties.PetasosProperties;
+
 
 /**
  * 
@@ -61,9 +61,7 @@ public class ClusteredGeneralParcelMap {
     @Inject
     CamelContext camelContext;
     
-    @Inject
-    PetasosProperties petasosProperties;
-    
+   
     // The clustered cache for the PetasosParcels coordinated by this Petasos::Node (cluster) instance
     private Cache<FDNToken, ResilienceParcel> petasosParcelCache;
     

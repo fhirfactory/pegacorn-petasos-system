@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.FDNTokenSet;
-import net.fhirfactory.pegacorn.deploymentproperties.PetasosProperties;
 
 /**
  * @author Mark A. Hunter
@@ -50,8 +49,6 @@ public class ClusteredUoW2ParcelInstanceIDSetMap {
     @Inject
     CamelContext camelContext;
 
-    @Inject
-    PetasosProperties petasosProperties;
 
     private Cache<FDN, FDNTokenSet> uow2ParcelSetMap;
 
