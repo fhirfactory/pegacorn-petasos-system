@@ -27,33 +27,35 @@ import net.fhirfactory.pegacorn.common.model.FDNToken;
  * @author Mark A. Hunter
  */
 public class UoWPayload {
-    private FDNToken payloadType;
-    private FDNToken payloadCreator;
+    private FDNToken payloadInstanceID;
+    private FDNToken payloadTypeID;
+    private FDNToken payloadTopicID;
     private String payload;
 
     public UoWPayload() {
-        payloadType = null;
+        payloadTypeID = null;
         payload = null;
-        payloadCreator = null;
+        payloadTopicID = null;
     }
 
     public UoWPayload(UoWPayload originalUoWPayload) {
-        payloadType = new FDNToken(originalUoWPayload.getPayloadType());
+        payloadTypeID = new FDNToken(originalUoWPayload.getPayloadTypeID());
         payload = new String(originalUoWPayload.getPayload());
-        payloadCreator = new FDNToken(originalUoWPayload.getPayloadCreator());
+        payloadTopicID = new FDNToken(originalUoWPayload.getPayloadTopicID());
+        payloadInstanceID = new FDNToken(originalUoWPayload.getPayloadInstanceID());
     }
 
     public UoWPayload(FDNToken payloadType, String payloadContent){
-        this.payloadType = new FDNToken(payloadType);
+        this.payloadTypeID = new FDNToken(payloadType);
         this.payload = new String(payloadContent);
     }
 
-    public FDNToken getPayloadType() {
-        return payloadType;
+    public FDNToken getPayloadTypeID() {
+        return payloadTypeID;
     }
 
-    public void setPayloadType(FDNToken payloadType) {
-        this.payloadType = payloadType;
+    public void setPayloadTypeID(FDNToken payloadTypeID) {
+        this.payloadTypeID = payloadTypeID;
     }
 
     public String getPayload() {
@@ -64,11 +66,19 @@ public class UoWPayload {
         this.payload = payload;
     }
 
-    public FDNToken getPayloadCreator() {
-        return payloadCreator;
+    public FDNToken getPayloadTopicID() {
+        return payloadTopicID;
     }
 
-    public void setPayloadCreator(FDNToken payloadCreator) {
-        this.payloadCreator = payloadCreator;
+    public void setPayloadTopicID(FDNToken payloadTopicID) {
+        this.payloadTopicID = payloadTopicID;
+    }
+
+    public FDNToken getPayloadInstanceID() {
+        return payloadInstanceID;
+    }
+
+    public void setPayloadInstanceID(FDNToken payloadInstanceID) {
+        this.payloadInstanceID = payloadInstanceID;
     }
 }

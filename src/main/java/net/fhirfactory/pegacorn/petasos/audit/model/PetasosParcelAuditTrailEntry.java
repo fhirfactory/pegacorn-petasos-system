@@ -30,23 +30,27 @@ import net.fhirfactory.pegacorn.petasos.model.uow.UoW;
 
 import java.time.Instant;
 import java.util.Date;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelFinalisationStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcelProcessingStatusEnum;
+import net.fhirfactory.pegacorn.petasos.model.wup.WUPJobCard;
 
 public class PetasosParcelAuditTrailEntry {
     private Date auditTrailEntryDate;
     private UoW actualUoW;
     private FDNToken parcelInstanceID;
-    private UoWProcessingOutcomeEnum uowOutcome;
+    private ResilienceParcelFinalisationStatusEnum parcelFinalsationStatus;
+    private ResilienceParcelProcessingStatusEnum processingStatus;
     private FDNTokenSet alternativeWUPInstanceIDSet;
     private FDNTokenSet alternativeParcelIDSet;
-    private FDNTokenSet downstreamParcelIDSet;
-    private FDNToken upstreamParcelID;
+    private FDNTokenSet downstreamEpisodeIDSet;
+    private FDNToken upstreamEpisodeID;
     private FDNToken primaryWUPInstanceID;
     private FDNToken parcelTypeID;
-    private ResilienceParcelJobCard processingOutcome;
     private Date parcelRegistrationDate;
     private Date parcelStartDate;
     private Date parcelFinishedDate;
     private Date parcelFinalisedDate;
+    private Date parcelCancellationDate;
 
     //
     // Constructor(s)
@@ -57,12 +61,12 @@ public class PetasosParcelAuditTrailEntry {
         this.auditTrailEntryDate = null;
         this.actualUoW = null;
         this.parcelInstanceID = null;
-        this.uowOutcome = null;
+        this.parcelFinalsationStatus = null;
         this.alternativeWUPInstanceIDSet = null;
-        this.downstreamParcelIDSet = null;
-        this.upstreamParcelID = null;
+        this.processingStatus = null;
+        this.downstreamEpisodeIDSet = null;
+        this.upstreamEpisodeID = null;
         this.primaryWUPInstanceID = null;
-        this.processingOutcome = null;
         this.parcelRegistrationDate = null;
         this.parcelTypeID = null;
         this.parcelStartDate = null;
@@ -74,76 +78,77 @@ public class PetasosParcelAuditTrailEntry {
             return;
         }
         this.auditTrailEntryDate = Date.from(Instant.now());
-//        if(theParcel.hasAlternateWUPInstanceIDSet()) {
-//            this.alternativeWUPInstanceIDSet = new FDNTokenSet(theParcel.getAlternateWUPInstanceIDSet());
-//        }
         if( theParcel.hasActualUoW()) {
             this.actualUoW = theParcel.getActualUoW();
-            this.uowOutcome = this.actualUoW.getProcessingOutcome();
         }
-        if(theParcel.hasParcelJobCard()){
-            this.processingOutcome = theParcel.getParcelJobCard();
+        if(theParcel.hasDownstreamEpisodeIDSet()){
+            this.downstreamEpisodeIDSet = new FDNTokenSet(theParcel.getDownstreamEpisodeIDSet());
         }
-        if(theParcel.hasDownstreamParcelIDSet()){
-            this.downstreamParcelIDSet = new FDNTokenSet(theParcel.getDownstreamEpisodeIDSet());
+        if(theParcel.hasUpstreamEpisodeID()){
+            this.upstreamEpisodeID = theParcel.getUpstreamEpisodeID();
         }
-        if(theParcel.hasUpstreamParcelID()){
-            this.upstreamParcelID = theParcel.getUpstreamEpisodeID();
-        }
-        if(theParcel.hasParcelTypeID()){
+        if(theParcel.hasTypeID()){
             this.parcelTypeID = theParcel.getTypeID();
         }
-        if(theParcel.hasParcelFinalisationDate()){
+        if(theParcel.hasFinalisationDate()){
             this.parcelFinalisedDate = theParcel.getFinalisationDate();
         }
-        if(theParcel.hasParcelInstanceID()){
+        if(theParcel.hasInstanceID()){
             this.parcelInstanceID = theParcel.getInstanceID();
         }
-        if(theParcel.hasParcelFinishedDate()){
+        if(theParcel.hasFinishedDate()){
             this.parcelFinishedDate = theParcel.getFinishedDate();
         }
-        if(theParcel.hasParcelRegistrationDate()){
+        if(theParcel.hasRegistrationDate()){
             this.parcelRegistrationDate = theParcel.getRegistrationDate();
         }
-        if(theParcel.hasParcelStartDate()){
+        if(theParcel.hasStartDate()){
             this.parcelStartDate = theParcel.getStartDate();
         }
-
+        if(theParcel.hasCancellationDate()){
+            this.parcelCancellationDate = theParcel.getCancellationDate();
+        }
+        if(theParcel.hasProcessingStatus()){
+            this.processingStatus = theParcel.getProcessingStatus();
+        }
+        if(theParcel.hasFinalisationStatus()){
+            this.parcelFinalsationStatus = theParcel.getFinalisationStatus();
+        }
     }
 
     //
     // Bean/Attribute Helper Methods
     //
     
-    // Helpers for the this.downstreamParcelIDSet attribute
+    // Helpers for the this.downstreamEpisodeIDSet attribute
     
     public boolean hasDownstreamParcelIDSet() {
-    	if(this.downstreamParcelIDSet == null ) {
+    	if(this.downstreamEpisodeIDSet == null ) {
     		return(false);
     	}
-    	if(this.downstreamParcelIDSet.isEmpty()) {
+    	if(this.downstreamEpisodeIDSet.isEmpty()) {
     		return(false);
     	}
     	return(true);
     }
     
-    public void setDownstreamParcelIDSet(FDNTokenSet newDownstreamParcelIDSet) {
+    public void setDownstreamEpisodeIDSet(FDNTokenSet newDownstreamParcelIDSet) {
     	if(newDownstreamParcelIDSet == null) {
-    		this.downstreamParcelIDSet = null;
+    		this.downstreamEpisodeIDSet = null;
     		return;
     	}
     	if(newDownstreamParcelIDSet.isEmpty()) {
-    		this.downstreamParcelIDSet = new FDNTokenSet();
+    		this.downstreamEpisodeIDSet = new FDNTokenSet();
     		return;
     	}
-    	this.downstreamParcelIDSet = new FDNTokenSet(newDownstreamParcelIDSet);
+    	this.downstreamEpisodeIDSet = new FDNTokenSet(newDownstreamParcelIDSet);
     }
     
-    public FDNTokenSet getDownstreamParcelIDSet() {
-    	if(this.downstreamParcelIDSet == null) {
+    public FDNTokenSet getDownstreamEpisodeIDSet() {
+    	if(this.downstreamEpisodeIDSet == null) {
     		return(null);
     	}
-    	FDNTokenSet fdnSetCopy = new FDNTokenSet(this.downstreamParcelIDSet);
+    	FDNTokenSet fdnSetCopy = new FDNTokenSet(this.downstreamEpisodeIDSet);
     	return(fdnSetCopy);
     }
 
@@ -211,35 +216,35 @@ public class PetasosParcelAuditTrailEntry {
 
     // Helpers for the this.uowOutcome attribute
 
-    public boolean hasUoWOutcome(){
-        if(this.uowOutcome == null){
+    public boolean hasProcessingStatus(){
+        if(this.processingStatus == null){
             return(false);
         }
         return(true);
     }
-    public UoWProcessingOutcomeEnum getUowOutcome() {
-        return uowOutcome;
+    public ResilienceParcelProcessingStatusEnum getProcessingStatus() {
+        return(this.processingStatus);
     }
 
-    public void setUowOutcome(UoWProcessingOutcomeEnum uowOutcome) {
-        this.uowOutcome = uowOutcome;
+    public void setUowOutcome(ResilienceParcelProcessingStatusEnum newProcessingStatus) {
+        this.processingStatus = newProcessingStatus;
     }
 
-    // Helpers for the this.upstreamParcelID attribute
+    // Helpers for the this.upstreamEpisodeID attribute
 
     public boolean hasUpstreamParcelID(){
-        if(this.upstreamParcelID==null){
+        if(this.upstreamEpisodeID==null){
             return(false);
         }
         return(true);
     }
 
-    public FDNToken getUpstreamParcelID() {
-        return(upstreamParcelID);
+    public FDNToken getUpstreamEpisodeID() {
+        return(upstreamEpisodeID);
     }
 
-    public void setUpstreamParcelID(FDNToken upstreamParcelID) {
-        this.upstreamParcelID = upstreamParcelID;
+    public void setUpstreamEpisodeID(FDNToken upstreamEpisodeID) {
+        this.upstreamEpisodeID = upstreamEpisodeID;
     }
 
     // Helpers for the this.primaryWUPInstanceID attribute
@@ -257,23 +262,6 @@ public class PetasosParcelAuditTrailEntry {
 
     public void setPrimaryWUPInstanceID(FDNToken primaryWUPInstanceID) {
         this.primaryWUPInstanceID = primaryWUPInstanceID;
-    }
-
-    // Helpers for the this.processingOutcome attribute
-
-    public boolean hasProcessingOutcome(){
-        if(this.processingOutcome==null){
-            return(false);
-        }
-        return(true);
-    }
-
-    public ResilienceParcelJobCard getProcessingOutcome() {
-        return processingOutcome;
-    }
-
-    public void setProcessingOutcome(ResilienceParcelJobCard processingOutcome) {
-        this.processingOutcome = processingOutcome;
     }
 
     // Helpers for the this.parcelRegistrationDate attribute

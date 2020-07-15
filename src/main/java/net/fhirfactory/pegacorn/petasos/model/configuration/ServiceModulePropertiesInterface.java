@@ -23,10 +23,10 @@
 package net.fhirfactory.pegacorn.petasos.model.configuration;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
-import net.fhirfactory.pegacorn.petasos.core.processingresilience.common.ResilienceModeEnum;
+import net.fhirfactory.pegacorn.petasos.model.resilience.mode.DeploymentResilienceMode;
 
 public interface ServiceModulePropertiesInterface {
-    public ResilienceModeEnum getReliabilityMode();
+    public DeploymentResilienceMode getReliabilityMode();
 
     public FDN getServiceModuleInstanceContext();
     public FDN getServiceModuleTypeContext();

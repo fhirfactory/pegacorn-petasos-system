@@ -31,41 +31,57 @@ import java.util.Date;
 
 public class ParcelStatusElement {
 
-    private ContinuityID statusElementID;
+    private ContinuityID activityID;
+    private Object activityIDLock;
     private ResilienceParcelProcessingStatusEnum parcelStatus;
+    private Object parcelStatusLock;
     private Integer retryCount;
+    private Object retryCountLock;
     private Date entryDate;
+    private Object entryDateLock;
     private boolean hasClusterFocus;
+    private Object hasClusterFocusLock;
     private boolean hasSystemWideFocus;
+    private Object hasSystemWideFocusLock;
     private boolean requiresRetry;
+    private Object requiresRetryLock;
 
     public ParcelStatusElement(ContinuityID newID) {
-        this.statusElementID = new ContinuityID(newID);
+        this.activityID = new ContinuityID(newID);
         this.entryDate = Date.from(Instant.now());
         this.hasClusterFocus = false;
         this.hasSystemWideFocus = false;
         this.parcelStatus = null;
         this.requiresRetry = false;
+        this.parcelStatusLock = new Object();
+        this.activityIDLock = new Object();
+        this.requiresRetryLock = new Object();
+        this.hasClusterFocusLock = new Object();
+        this.entryDateLock = new Object();
+        this.hasSystemWideFocusLock = new Object();
+        this.requiresRetryLock = new Object();
     }
 
     public FDNToken getParcelInstanceID() {
-        return (this.statusElementID.getPresentParcelInstanceID());
+        return (this.activityID.getPresentParcelInstanceID());
     }
 
     public FDNToken getWupInstanceID() {
-        return (this.statusElementID.getPresentWUPInstanceID());
+        return (this.activityID.getPresentWUPInstanceID());
     }
 
     public FDNToken getWupTypeID() {
-        return (this.statusElementID.getPresentWUPTypeID());
+        return (this.activityID.getPresentWUPTypeID());
     }
 
-    public ContinuityID getStatusElementID() {
-        return statusElementID;
+    public ContinuityID getActivityID() {
+        return activityID;
     }
 
-    public void setStatusElementID(ContinuityID statusElementID) {
-        this.statusElementID = statusElementID;
+    public void setActivityID(ContinuityID activityID) {
+        synchronized (activityIDLock) {
+            this.activityID = activityID;
+        }
     }
 
     public Date getEntryDate() {
@@ -73,7 +89,9 @@ public class ParcelStatusElement {
     }
 
     public void setEntryDate(Date entryDate) {
-        this.entryDate = entryDate;
+        synchronized (entryDateLock) {
+            this.entryDate = entryDate;
+        }
     }
 
     public boolean getHasClusterFocus() {
@@ -81,7 +99,9 @@ public class ParcelStatusElement {
     }
 
     public void setHasClusterFocus(boolean hasFocus) {
-        this.hasClusterFocus = hasFocus;
+        synchronized (hasClusterFocusLock) {
+            this.hasClusterFocus = hasFocus;
+        }
     }
 
     public boolean getHasSystemWideFocus() {
@@ -89,7 +109,9 @@ public class ParcelStatusElement {
     }
 
     public void setHasSystemWideFocus(boolean systemWideFocus) {
-        this.hasSystemWideFocus = systemWideFocus;
+        synchronized(hasSystemWideFocusLock) {
+            this.hasSystemWideFocus = systemWideFocus;
+        }
     }
 
     public ResilienceParcelProcessingStatusEnum getParcelStatus() {
@@ -97,7 +119,9 @@ public class ParcelStatusElement {
     }
 
     public void setParcelStatus(ResilienceParcelProcessingStatusEnum parcelStatus) {
-        this.parcelStatus = parcelStatus;
+        synchronized (parcelStatusLock) {
+            this.parcelStatus = parcelStatus;
+        }
     }
 
     public Integer getRetryCount() {
@@ -105,7 +129,9 @@ public class ParcelStatusElement {
     }
 
     public void setRetryCount(Integer retryCount) {
-        this.retryCount = retryCount;
+        synchronized (retryCountLock) {
+            this.retryCount = retryCount;
+        }
     }
 
     public boolean isRequiresRetry() {
@@ -113,6 +139,8 @@ public class ParcelStatusElement {
     }
 
     public void setRequiresRetry(boolean requiresRetry) {
-        this.requiresRetry = requiresRetry;
+        synchronized (requiresRetryLock) {
+            this.requiresRetry = requiresRetry;
+        }
     }
 }

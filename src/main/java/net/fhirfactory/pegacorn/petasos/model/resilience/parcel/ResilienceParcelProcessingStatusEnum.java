@@ -27,6 +27,7 @@ package net.fhirfactory.pegacorn.petasos.model.resilience.parcel;
  */
 public enum ResilienceParcelProcessingStatusEnum {
     PARCEL_STATUS_REGISTERED("pegacorn.petasos.parcel.status.registered"),
+    PARCEL_STATUS_CANCELLED("pegacorn.petasos.parcel.status.cancelled"),
     PARCEL_STATUS_INITIATED("pegacorn.petasos.parcel.status.initiated"),
     PARCEL_STATUS_ACTIVE("pegacorn.petasos.parcel.status.active"),
     PARCEL_STATUS_ACTIVE_ELSEWHERE("pegacorn.petasos.parcel.status.active_elsewhere"),

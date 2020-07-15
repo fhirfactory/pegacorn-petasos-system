@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 mhunter
+ * Copyright (c) 2020 MAHun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,44 +22,21 @@
 
 package net.fhirfactory.pegacorn.petasos.wup;
 
-import net.fhirfactory.pegacorn.common.model.FDN;
-import net.fhirfactory.pegacorn.common.model.RDN;
-import net.fhirfactory.pegacorn.petasos.core.wupbuilder.MessageBasedWUPHelper;
-import net.fhirfactory.pegacorn.petasos.model.wup.WUPJobCard;
-import net.fhirfactory.pegacorn.petasos.model.resilience.parcel.ResilienceParcel;
-import org.apache.camel.builder.RouteBuilder;
+import net.fhirfactory.pegacorn.petasos.PetasosServicesBroker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.time.Instant;
 
-public abstract class StandardWUP extends RouteBuilder {
+import net.fhirfactory.pegacorn.petasos.wup.common.GenericWUPTemplate;
+
+public abstract class StandardWUP extends GenericWUPTemplate {
     private static final Logger LOG = LoggerFactory.getLogger(StandardWUP.class);
 
-    private FDN wupTypeID = null;
-    private FDN wupInstanceID = null;
-    private WUPJobCard wupInstanceJobCard;
-    private ResilienceParcel currentParcelOfWork;
-    private String wupEgressPoint = null;
-    private String wupIngresPoint= null;
 
     @Inject
-    MessageBasedWUPHelper wupProxy;
+    PetasosServicesBroker moduleIM;
 
-    final protected void register(FDN myWUPTypeID){
-        moduleIM.registerWUP(myWUPTypeID.getToken());
-        this.wupTypeID = new FDN(myWUPTypeID);
-        FDN newWUPInstanceID = new FDN(myWUPTypeID);
-        newWUPInstanceID.appendRDN(new RDN("InstanceQualifier", Integer.toHexString(Instant.now().getNano())));
-        this.wupInstanceID = newWUPInstanceID;
-    }
 
-    protected String ingresFeed(){
-        return(this.wupIngresPoint);
-    }
 
-    protected String egressFeed(){
-        return(this.wupEgressPoint);
-    }
 }

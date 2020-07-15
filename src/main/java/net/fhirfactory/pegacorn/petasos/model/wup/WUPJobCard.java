@@ -22,6 +22,8 @@
 package net.fhirfactory.pegacorn.petasos.model.wup;
 
 import net.fhirfactory.pegacorn.petasos.model.pathway.ContinuityID;
+import net.fhirfactory.pegacorn.petasos.model.resilience.mode.ConcurrencyMode;
+import net.fhirfactory.pegacorn.petasos.model.resilience.mode.DeploymentResilienceMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,18 +34,26 @@ public class WUPJobCard {
     private static final Logger LOG = LoggerFactory.getLogger(WUPJobCard.class);
 
     private ContinuityID cardID;
+    private Object cardIDLock;
     private Date updateDate;
+    private Object updateDateLock;
     private WUPActivityStatusEnum currentStatus;
+    private Object currentStatusLock;
     private WUPActivityStatusEnum requestedStatus;
+    private Object requestedStatusLock;
     private WUPActivityStatusEnum grantedStatus;
-    private WUPClusterModeEnum clusterMode;
-    private WUPSystemModeEnum systemMode;
+    private Object grantedStatusLock;
+    private ConcurrencyMode clusterMode;
+    private Object clusterModeLock;
+    private DeploymentResilienceMode systemMode;
+    private Object systemModeLock;
     private boolean isToBeDiscarded;
+    private Object isToBeDiscardedLock;
 
 
     private String toStringValue;
 
-    public WUPJobCard(ContinuityID activityID, WUPActivityStatusEnum currentStatus, WUPActivityStatusEnum requestedStatus, WUPClusterModeEnum clusterMode, WUPSystemModeEnum systemMode, Date updateDate) {
+    public WUPJobCard(ContinuityID activityID, WUPActivityStatusEnum currentStatus, WUPActivityStatusEnum requestedStatus, ConcurrencyMode clusterMode, DeploymentResilienceMode systemMode, Date updateDate) {
         this.cardID = null;
         this.updateDate = null;
         this.currentStatus = null;
@@ -52,6 +62,14 @@ public class WUPJobCard {
         this.systemMode = null;
         this.toStringValue = null;
         this.grantedStatus = null;
+        this.cardIDLock = new Object();
+        this.updateDateLock = new Object();
+        this.currentStatusLock =  new Object();
+        this.requestedStatusLock = new Object();
+        this.grantedStatusLock = new Object();
+        this.clusterModeLock = new Object();
+        this.systemModeLock = new Object();
+        this.isToBeDiscardedLock = new Object();
 
         if ((activityID == null)) {
             throw (new IllegalArgumentException("WUP Continuity Record is null in Constructor"));
@@ -67,6 +85,22 @@ public class WUPJobCard {
     }
 
     public WUPJobCard(WUPJobCard originalCard) {
+        this.cardID = null;
+        this.updateDate = null;
+        this.currentStatus = null;
+        this.requestedStatus = null;
+        this.clusterMode = null;
+        this.systemMode = null;
+        this.toStringValue = null;
+        this.grantedStatus = null;
+        this.cardIDLock = new Object();
+        this.updateDateLock = new Object();
+        this.currentStatusLock =  new Object();
+        this.requestedStatusLock = new Object();
+        this.grantedStatusLock = new Object();
+        this.clusterModeLock = new Object();
+        this.systemModeLock = new Object();
+        this.isToBeDiscardedLock = new Object();
         if (originalCard == null) {
             throw (new IllegalArgumentException("originalCard (WUPJobCard) is null in Copy Constructor"));
         }
@@ -93,7 +127,10 @@ public class WUPJobCard {
     }
 
     public void setGrantedStatus(WUPActivityStatusEnum grantedStatus) {
-        this.grantedStatus = grantedStatus;
+        synchronized (grantedStatusLock) {
+            this.grantedStatus = grantedStatus;
+            generateToString();
+        }
     }
 
     public boolean getIsToBeDiscarded() {
@@ -101,7 +138,10 @@ public class WUPJobCard {
     }
 
     public void setIsToBeDiscarded(boolean beDiscarded){
-        this.isToBeDiscarded = beDiscarded;
+        synchronized (isToBeDiscardedLock) {
+            this.isToBeDiscarded = beDiscarded;
+            generateToString();
+        }
     }
 
     // Helper/accessor methods for the cardID attribute
@@ -118,8 +158,10 @@ public class WUPJobCard {
     }
 
     public void setCardID(ContinuityID newCardID) {
-        this.cardID = newCardID;
-        generateToString();
+        synchronized (cardIDLock) {
+            this.cardID = newCardID;
+            generateToString();
+        }
     }
 
     public boolean hasUpdateDate() {
@@ -135,8 +177,10 @@ public class WUPJobCard {
     }
 
     public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-        generateToString();
+        synchronized (updateDateLock) {
+            this.updateDate = updateDate;
+            generateToString();
+        }
     }
 
     public boolean hasCurrentStatus() {
@@ -152,8 +196,10 @@ public class WUPJobCard {
     }
 
     public void setCurrentStatus(WUPActivityStatusEnum currentStatus) {
-        this.currentStatus = currentStatus;
-        generateToString();
+        synchronized (currentStatusLock) {
+            this.currentStatus = currentStatus;
+            generateToString();
+        }
     }
 
     public boolean hasClusterMode() {
@@ -164,13 +210,15 @@ public class WUPJobCard {
         }
     }
 
-    public WUPClusterModeEnum getClusterMode() {
+    public ConcurrencyMode getClusterMode() {
         return clusterMode;
     }
 
-    public void setClusterMode(WUPClusterModeEnum clusterMode) {
-        this.clusterMode = clusterMode;
-        generateToString();
+    public void setClusterMode(ConcurrencyMode clusterMode) {
+        synchronized (clusterModeLock) {
+            this.clusterMode = clusterMode;
+            generateToString();
+        }
     }
 
     @Override
@@ -245,8 +293,10 @@ public class WUPJobCard {
     }
 
     public void setRequestedStatus(WUPActivityStatusEnum requestedStatus) {
-        this.requestedStatus = requestedStatus;
-        generateToString();
+        synchronized (requestedStatusLock) {
+            this.requestedStatus = requestedStatus;
+            generateToString();
+        }
     }
 
     public boolean hasSystemMode() {
@@ -257,11 +307,14 @@ public class WUPJobCard {
         }
     }
 
-    public WUPSystemModeEnum getSystemMode() {
+    public DeploymentResilienceMode getSystemMode() {
         return systemMode;
     }
 
-    public void setSystemMode(WUPSystemModeEnum systemMode) {
-        this.systemMode = systemMode;
+    public void setSystemMode(DeploymentResilienceMode systemMode) {
+        synchronized (systemModeLock) {
+            this.systemMode = systemMode;
+            generateToString();
+        }
     }
 }

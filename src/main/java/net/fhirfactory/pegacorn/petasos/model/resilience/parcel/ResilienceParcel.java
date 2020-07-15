@@ -40,21 +40,36 @@ import org.slf4j.LoggerFactory;
 public class ResilienceParcel {
     private static final Logger LOG = LoggerFactory.getLogger(ResilienceParcel.class);
 
-    private FDNToken instanceID = null;
-    private FDNToken typeID = null;
-    private FDNToken episodeID = null;
-    private UoW actualUoW = null;
-    private FDNToken associatedWUPInstanceID = null;
+    private FDNToken instanceID;
+    private Object instanceIDLock;
+    private FDNToken typeID;
+    private Object typeIDLock;
+    private FDNToken episodeID;
+    private Object episodeIDLock;
+    private UoW actualUoW;
+    private Object actualUoWLock;
+    private FDNToken associatedWUPInstanceID;
+    private Object associatedWUPInstanceIDLock;
     private FDNTokenSet downstreamEpisodeIDSet;
-    private FDNToken upstreamEpisodeID = null;
+    private Object downstreamEpisodeIDSetLock;
+    private FDNToken upstreamEpisodeID;
+    private Object upstreamEpisodeIDLock;
     private final static String INSTANCE_QUALIFIER_TYPE = "ParcelInstance";
     private final static String TYPE_QUALIFIER_TYPE = "ParcelType";
     private ResilienceParcelFinalisationStatusEnum finalisationStatus;
+    private Object finalisationStatusLock;
     private ResilienceParcelProcessingStatusEnum processingStatus;
+    private Object processingStatusLock;
     private Date registrationDate;
-    private Date startDate = null;
-    private Date finishedDate = null;
-    private Date finalisationDate = null;
+    private Object registrationDateLock;
+    private Date startDate;
+    private Object startDateLock;
+    private Date finishedDate;
+    private Object finishedDateLock;
+    private Date finalisationDate;
+    private Object finalisationDateLock;
+    private Date cancellationDate;
+    private Object cancellationDateLock;
 
     //
     // Constructors
@@ -72,7 +87,23 @@ public class ResilienceParcel {
         this.startDate = null;
         this.finishedDate = null;
         this.finalisationDate = null;
+        this.finalisationStatus = null;
         this.episodeID = null;
+        this.cancellationDate = null;
+        this.instanceIDLock = new Object();
+        this.typeIDLock = new Object();
+        this.episodeIDLock = new Object();
+        this.actualUoWLock = new Object();
+        this.associatedWUPInstanceIDLock = new Object();
+        this.downstreamEpisodeIDSetLock = new Object();
+        this.upstreamEpisodeIDLock = new Object();
+        this.finalisationStatusLock = new Object();
+        this.processingStatusLock = new Object();
+        this.registrationDateLock = new Object();
+        this.startDateLock = new Object();
+        this.finishedDateLock = new Object();
+        this.finalisationDateLock = new Object();
+        this.cancellationDateLock = new Object();
         // Now, add what we have been supplied
         this.associatedWUPInstanceID = activityID.getPresentWUPInstanceID();
         this.episodeID = this.buildEpisodeID(activityID, theUoW);
@@ -80,7 +111,7 @@ public class ResilienceParcel {
         this.instanceID = this.buildParcelInstanceID(activityID, theUoW);
         this.actualUoW = theUoW;
         this.downstreamEpisodeIDSet = new FDNTokenSet();
-        this.upstreamEpisodeID = activityID.getPreviousParcelEpisodeID();
+        this.upstreamEpisodeID = activityID.getPreviousWUAEpisodeID();
         this.registrationDate = Date.from(Instant.now());
         this.finalisationStatus = ResilienceParcelFinalisationStatusEnum.PARCEL_FINALISATION_STATUS_NOT_FINALISED;
     }
@@ -98,7 +129,25 @@ public class ResilienceParcel {
         this.finishedDate = null;
         this.finalisationDate = null;
         this.episodeID = null;
+        this.cancellationDate = null;
+        this.instanceIDLock = new Object();
+        this.typeIDLock = new Object();
+        this.episodeIDLock = new Object();
+        this.actualUoWLock = new Object();
+        this.associatedWUPInstanceIDLock = new Object();
+        this.downstreamEpisodeIDSetLock = new Object();
+        this.upstreamEpisodeIDLock = new Object();
+        this.finalisationStatusLock = new Object();
+        this.processingStatusLock = new Object();
+        this.registrationDateLock = new Object();
+        this.startDateLock = new Object();
+        this.finishedDateLock = new Object();
+        this.finalisationDateLock = new Object();
+        this.cancellationDateLock = new Object();
         // Now, add what we have been supplied
+        if( originalParcel.hasCancellationDate() ){
+            this.cancellationDate = originalParcel.getCancellationDate();
+        }
         if( originalParcel.hasAssociatedWUPInstanceID() ){
             this.associatedWUPInstanceID = originalParcel.getAssociatedWUPInstanceID();
         }
@@ -127,16 +176,36 @@ public class ResilienceParcel {
             this.upstreamEpisodeID = originalParcel.getUpstreamEpisodeID();
         }
         if( originalParcel.hasDownstreamEpisodeIDSet()){
-            this.downstreamEpisodeIDSet = new FDNTokenSet(originalParcel.getDownstreamEpisodeIDSet());
+            this.downstreamEpisodeIDSet = originalParcel.getDownstreamEpisodeIDSet();
         }
         if( originalParcel.hasEpisodeID()){
-            this.episodeID = new FDNToken(originalParcel.getEpisodeID());
+            this.episodeID = originalParcel.getEpisodeID();
         }
     }
 
     //
     // Bean/Attribute Methods
     //
+
+    // Helper methods for the this.cancellationDate attribute
+
+    public boolean hasCancellationDate(){
+        if(this.cancellationDate==null){
+            return(false);
+        } else {
+            return (true);
+        }
+    }
+
+    public Date getCancellationDate(){
+        return(this.cancellationDate);
+    }
+
+    public void setCancellationDate(Date newCancellationDate ){
+        synchronized (cancellationDateLock){
+            this.cancellationDate = newCancellationDate;
+        }
+    }
 
     // Helper methods for the this.actualUoW attribute
 
@@ -158,7 +227,9 @@ public class ResilienceParcel {
      * @param actualUoW the containedUoW to set
      */
     public void setActualUoW(UoW actualUoW) {
-        this.actualUoW = new UoW(actualUoW);
+        synchronized (actualUoWLock) {
+            this.actualUoW = new UoW(actualUoW);
+        }
     }
 
     // Helper methods for the this.actualUoW attribute
@@ -178,20 +249,22 @@ public class ResilienceParcel {
      */
     public FDNTokenSet getDownstreamEpisodeIDSet() {
     	if( this.downstreamEpisodeIDSet == null ) {
-    		return(new FDNTokenSet());
-    	}
-    	FDNTokenSet fdnSetCopy = new FDNTokenSet(this.downstreamEpisodeIDSet);
-        return (fdnSetCopy);
+    		return(null);
+    	} else {
+            return (this.downstreamEpisodeIDSet);
+        }
     }
 
     /**
      * @param downstreamEpisodeIDSet the Parcels that continue on the work from this Parcel
      */
     public void setDownstreamEpisodeIDSet(FDNTokenSet downstreamEpisodeIDSet) {
-        if(downstreamEpisodeIDSet ==null) {
-        	this.downstreamEpisodeIDSet = new FDNTokenSet();
+        synchronized (downstreamEpisodeIDSetLock) {
+            if (downstreamEpisodeIDSet == null) {
+                this.downstreamEpisodeIDSet = new FDNTokenSet();
+            }
+            this.downstreamEpisodeIDSet = new FDNTokenSet(downstreamEpisodeIDSet);
         }
-        this.downstreamEpisodeIDSet = new FDNTokenSet(downstreamEpisodeIDSet);
     }
 
     // Helper methods for the this.precursorParcelID attribute
@@ -207,7 +280,9 @@ public class ResilienceParcel {
      * @return the upstreamParcelInstanceID
      */
     public FDNToken getUpstreamEpisodeID() {
-        return upstreamEpisodeID;
+        synchronized(upstreamEpisodeIDLock) {
+            return this.upstreamEpisodeID;
+        }
     }
 
     /**
@@ -233,7 +308,9 @@ public class ResilienceParcel {
     }
 
     public void setInstanceID(FDNToken parcelInstance) {
-        this.instanceID = parcelInstance;
+        synchronized (instanceIDLock) {
+            this.instanceID = parcelInstance;
+        }
     }
 
     // Helper methods for the this.parcelTypeID attribute
@@ -250,7 +327,9 @@ public class ResilienceParcel {
     }
 
     public void setParcelTypeFDN(FDNToken parcelType) {
-        this.typeID = parcelType;
+        synchronized (typeIDLock) {
+            this.typeID = parcelType;
+        }
     }
 
     // Helper methods for the this.parcelRegistrationDate attribute
@@ -267,7 +346,9 @@ public class ResilienceParcel {
     }
 
     public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
+        synchronized (registrationDateLock) {
+            this.registrationDate = registrationDate;
+        }
     }
 
     // Helper methods for the this.parcelStartDate attribute
@@ -283,7 +364,9 @@ public class ResilienceParcel {
     }
 
     public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+        synchronized (startDateLock) {
+            this.startDate = startDate;
+        }
     }
 
     // Helper methods for the this.parcelFinishedDate attribute
@@ -300,7 +383,9 @@ public class ResilienceParcel {
     }
 
     public void setFinishedDate(Date finishedDate) {
-        this.finishedDate = finishedDate;
+        synchronized (finishedDateLock) {
+            this.finishedDate = finishedDate;
+        }
     }
 
     // Helper methods for the this.parcelFinalisationDate attribute
@@ -317,7 +402,9 @@ public class ResilienceParcel {
     }
 
     public void setFinalisationDate(Date finalisationDate) {
-        this.finalisationDate = finalisationDate;
+        synchronized (finalisationDateLock) {
+            this.finalisationDate = finalisationDate;
+        }
     }
 
     // Helper methods for the this.associatedWUPInstanceID attribute
@@ -334,14 +421,18 @@ public class ResilienceParcel {
     }
 
     public void setAssociatedWUPInstanceID(FDNToken associatedWUPInstanceID) {
-        this.associatedWUPInstanceID = associatedWUPInstanceID;
+        synchronized (associatedWUPInstanceIDLock) {
+            this.associatedWUPInstanceID = associatedWUPInstanceID;
+        }
     }
 
     public void setTypeID(FDNToken typeID) {
-        this.typeID = typeID;
+        synchronized(typeIDLock) {
+            this.typeID = typeID;
+        }
     }
 
-    public boolean hasParcelFinalisationStatus(){
+    public boolean hasFinalisationStatus(){
         if(this.finalisationStatus ==null){
             return(false);
         } else {
@@ -354,7 +445,9 @@ public class ResilienceParcel {
     }
 
     public void setFinalisationStatus(ResilienceParcelFinalisationStatusEnum finalisationStatus) {
-        this.finalisationStatus = finalisationStatus;
+        synchronized (finalisationStatusLock) {
+            this.finalisationStatus = finalisationStatus;
+        }
     }
 
     public boolean hasProcessingStatus(){
@@ -370,7 +463,9 @@ public class ResilienceParcel {
     }
 
     public void setProcessingStatus(ResilienceParcelProcessingStatusEnum processingStatus) {
-        this.processingStatus = processingStatus;
+        synchronized (processingStatusLock) {
+            this.processingStatus = processingStatus;
+        }
     }
 
     // toString()
@@ -439,7 +534,7 @@ public class ResilienceParcel {
             parcelFinalisationDateString = "(finalisationDate:null)";
         }
         String parcelFinalisationStatusEnumString;
-        if(hasParcelFinalisationStatus()){
+        if(hasFinalisationStatus()){
             parcelFinalisationStatusEnumString = "(finalisationStatus:" + finalisationStatus.toString() + ")";
         } else {
             parcelFinalisationStatusEnumString = "(finalisationStatus:null)";
@@ -456,6 +551,12 @@ public class ResilienceParcel {
         } else {
             parcelEpisodeString = "(episodeID:null)";
         }
+        String cancellationDateString;
+        if(hasCancellationDate()){
+            cancellationDateString = "(cancellationDate:" + episodeID.toString() + ")";
+        } else {
+            cancellationDateString = "(cancellationDate:null)";
+        }
         newString = newString
                 + parcelInstanceIDString + ","
                 + parcelEpisodeString + ","
@@ -469,7 +570,8 @@ public class ResilienceParcel {
                 + parcelFinishedDateString + ","
                 + parcelFinalisationDateString + ","
                 + parcelProcessingStatusEnumString + ","
-                + parcelFinalisationDateString + "}";
+                + parcelFinalisationDateString + ","
+                + cancellationDateString + "}";
         return(newString);
     }
 
@@ -486,7 +588,9 @@ public class ResilienceParcel {
     }
 
     public void setEpisodeID(FDNToken episodeID) {
-        this.episodeID = episodeID;
+        synchronized (episodeIDLock) {
+            this.episodeID = episodeID;
+        }
     }
 
     public FDNToken buildEpisodeID(ContinuityID activityID, UoW theUoW){

@@ -62,8 +62,6 @@ public class UoW {
      */
     private UoWProcessingOutcomeEnum processingOutcome;
 
-    private FDNToken payloadCreator;
-
     //
     // Constructors
     //
@@ -75,7 +73,6 @@ public class UoW {
         this.typeID = new FDNToken(uowTypeID);
         FDN instanceFDN = new FDN(uowTypeID);
         generateInstanceID();
-        this.payloadCreator = null;
         if (LOG.isTraceEnabled()) {
             LOG.trace("UoW(FDN, UoWPayloadSet): this.typeID -->, this.instanceID -->{}", this.typeID, this.instanceID);
         }
@@ -87,7 +84,6 @@ public class UoW {
         this.egressContent = new UoWPayloadSet();
         this.egressContent.getPayloadElements().addAll(originalUoW.getEgressContent().getPayloadElements());
         this.processingOutcome = originalUoW.getProcessingOutcome();
-        this.payloadCreator = originalUoW.getPayloadCreator();
         this.typeID = new FDNToken(originalUoW.getTypeID());
         generateInstanceID();
     }
@@ -96,13 +92,12 @@ public class UoW {
         LOG.debug(".UoW(): Constructor: uowTypeFDN --> {}", uowTypeID);
         this.typeID = uowTypeID;
         generateInstanceID();
-        this.payloadCreator = null;
         this.ingresContent = null;
         this.egressContent = new UoWPayloadSet();
     }
 
-    private void generateInstanceID(){
-        if(this.ingresContent == null){
+    private void generateInstanceID() {
+        if (this.ingresContent == null) {
             String generatedInstanceValue = Long.toString(Instant.now().getNano());
             FDN instanceFDN = new FDN(this.typeID);
             RDN newRDN = new RDN(HASH_ATTRIBUTE, generatedInstanceValue);
@@ -246,12 +241,12 @@ public class UoW {
         } else {
             uowToString = uowToString + "(typeID:null),";
         }
-        if (hasPayloadCreator()) {
-            uowToString = uowToString + "(payloadCreator:" + payloadCreator.toString() + "),";
-        } else {
-            uowToString = uowToString + "(payloadCreater:null";
-        }
         if (hasIngresContent()) {
+            if (ingresContent.getPayloadTopicID() != null) {
+                uowToString = uowToString + "(payloadTopic:" + getPayloadTopicID().toString() + "),";
+            } else {
+                uowToString = uowToString + "(payloadTopic:null),";
+            }
             uowToString = uowToString + "(ingresContent:" + ingresContent.toString() + "),";
         } else {
             uowToString = uowToString + "(ingresContent:null),";
@@ -281,19 +276,29 @@ public class UoW {
     }
 
     // payloadCreator Bean/Helper methods
-    public boolean hasPayloadCreator() {
-        if (this.payloadCreator == null) {
+    public boolean hasPayloadTopicID() {
+        if (this.ingresContent == null) {
             return (false);
         } else {
-            return (true);
+            if (ingresContent.getPayloadTopicID() == null) {
+                return (false);
+            } else {
+                return (true);
+            }
         }
     }
 
-    public FDNToken getPayloadCreator() {
-        return payloadCreator;
+    public FDNToken getPayloadTopicID() {
+        if (hasPayloadTopicID()) {
+            return (this.getIngresContent().getPayloadTopicID());
+        } else {
+            return (null);
+        }
     }
 
-    public void setPayloadCreator(FDNToken payloadCreator) {
-        this.payloadCreator = payloadCreator;
+    public void setPayloadTopicID(FDNToken newTopicID) {
+        if (this.hasIngresContent()) {
+            this.ingresContent.setPayloadTopicID(newTopicID);
+        }
     }
 }
