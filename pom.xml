@@ -24,5 +24,6 @@
 	<module>../pegacorn-platform-petasos-datasets</module>
 	<module>../pegacorn-platform-petasos-topology</module>
 	<module>../pegacorn-platform-petasos-core</module>
+	<module>../pegacorn-platform-petasos-ipc</module>
     </modules>
 </project>
